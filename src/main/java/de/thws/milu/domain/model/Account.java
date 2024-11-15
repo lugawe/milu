@@ -9,5 +9,5 @@ public interface Account {
 
     String getName();
 
-    List<Board> getBoards();
+    List<? extends Board> getBoards();
 }

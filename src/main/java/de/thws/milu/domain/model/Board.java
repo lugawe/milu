@@ -11,5 +11,5 @@ public interface Board {
 
     String getDescription();
 
-    List<Todo> getTodos();
+    List<? extends Todo> getTodos();
 }
