@@ -1,6 +1,6 @@
 package de.thws.milu;
 
-import de.thws.milu.modules.ServerModule;
+import de.thws.milu.setup.MiluServerSetup;
 import de.thws.milu.util.Lazy;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Bootstrap;
@@ -23,9 +23,13 @@ public class MiluServer extends Application<MiluServerConfiguration> {
 
     @Override
     public void initialize(Bootstrap<MiluServerConfiguration> bootstrap) {
+
+        MiluServerSetup setup = new MiluServerSetup(); // bundle and module
+
+        bootstrap.addBundle(setup);
         bootstrap.addBundle(GuiceBundle.builder()
                 .enableAutoConfig(BASE_PACKAGE)
-                .modules(new ServerModule())
+                .modules(setup)
                 .build());
     }
 
