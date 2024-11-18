@@ -2,7 +2,7 @@ package de.thws.milu.setup;
 
 import com.google.inject.AbstractModule;
 import de.thws.milu.MiluServerConfiguration;
-import de.thws.milu.modules.HibernateServerModule;
+import de.thws.milu.setup.modules.HibernateServerModule;
 import io.dropwizard.core.ConfiguredBundle;
 import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;

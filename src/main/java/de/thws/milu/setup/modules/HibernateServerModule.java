@@ -1,4 +1,4 @@
-package de.thws.milu.modules;
+package de.thws.milu.setup.modules;
 
 import com.google.inject.AbstractModule;
 import de.thws.milu.domain.repository.AccountRepository;
