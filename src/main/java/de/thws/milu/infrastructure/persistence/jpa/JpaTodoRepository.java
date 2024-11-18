@@ -2,7 +2,9 @@ package de.thws.milu.infrastructure.persistence.jpa;
 
 import de.thws.milu.domain.model.Todo;
 import de.thws.milu.domain.repository.TodoRepository;
+import de.thws.milu.infrastructure.persistence.jpa.entity.JpaTodo;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,11 +22,23 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepository {
 
     @Override
     public Optional<Todo> getById(UUID id) {
-        return Optional.empty();
+
+        log.debug("getById: {}", id);
+
+        EntityManager entityManager = getEntityManager();
+        JpaTodo todo = entityManager.find(JpaTodo.class, id);
+
+        return Optional.ofNullable(todo);
     }
 
     @Override
-    public void save(Todo todo) {}
+    public void save(Todo todo) {
+
+        log.debug("save: {}", todo);
+
+        EntityManager entityManager = getEntityManager();
+        entityManager.persist(todo);
+    }
 
     @Override
     public void deleteById(UUID id) {}

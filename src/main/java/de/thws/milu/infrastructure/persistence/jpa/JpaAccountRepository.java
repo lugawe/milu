@@ -2,7 +2,9 @@ package de.thws.milu.infrastructure.persistence.jpa;
 
 import de.thws.milu.domain.model.Account;
 import de.thws.milu.domain.repository.AccountRepository;
+import de.thws.milu.infrastructure.persistence.jpa.entity.JpaAccount;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,11 +22,23 @@ public class JpaAccountRepository extends JpaRepository implements AccountReposi
 
     @Override
     public Optional<Account> getById(UUID id) {
-        return Optional.empty();
+
+        log.debug("getById: {}", id);
+
+        EntityManager entityManager = getEntityManager();
+        JpaAccount account = entityManager.find(JpaAccount.class, id);
+
+        return Optional.ofNullable(account);
     }
 
     @Override
-    public void save(Account account) {}
+    public void save(Account account) {
+
+        log.debug("save: {}", account);
+
+        EntityManager entityManager = getEntityManager();
+        entityManager.persist(account);
+    }
 
     @Override
     public void deleteById(UUID id) {}

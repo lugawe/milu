@@ -2,7 +2,9 @@ package de.thws.milu.infrastructure.persistence.jpa;
 
 import de.thws.milu.domain.model.Board;
 import de.thws.milu.domain.repository.BoardRepository;
+import de.thws.milu.infrastructure.persistence.jpa.entity.JpaBoard;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,11 +22,23 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
 
     @Override
     public Optional<Board> getById(UUID id) {
-        return Optional.empty();
+
+        log.debug("getById: {}", id);
+
+        EntityManager entityManager = getEntityManager();
+        JpaBoard board = entityManager.find(JpaBoard.class, id);
+
+        return Optional.ofNullable(board);
     }
 
     @Override
-    public void save(Board board) {}
+    public void save(Board board) {
+
+        log.debug("save: {}", board);
+
+        EntityManager entityManager = getEntityManager();
+        entityManager.persist(board);
+    }
 
     @Override
     public void deleteById(UUID id) {}
