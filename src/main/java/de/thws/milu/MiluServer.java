@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.vyarus.dropwizard.guice.GuiceBundle;
 
-public class MiluServer extends Application<MiluConfiguration> {
+public class MiluServer extends Application<MiluServerConfiguration> {
 
     public static final String BASE_PACKAGE = "de.thws.milu";
 
@@ -22,7 +22,7 @@ public class MiluServer extends Application<MiluConfiguration> {
     }
 
     @Override
-    public void initialize(Bootstrap<MiluConfiguration> bootstrap) {
+    public void initialize(Bootstrap<MiluServerConfiguration> bootstrap) {
         bootstrap.addBundle(GuiceBundle.builder()
                 .enableAutoConfig(BASE_PACKAGE)
                 .modules(new ServerModule())
@@ -30,7 +30,7 @@ public class MiluServer extends Application<MiluConfiguration> {
     }
 
     @Override
-    public void run(MiluConfiguration configuration, Environment environment) {
+    public void run(MiluServerConfiguration configuration, Environment environment) {
         log.info("Run MiluServer");
     }
 }
