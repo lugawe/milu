@@ -2,6 +2,7 @@ package de.thws.milu.resources;
 
 import de.thws.milu.application.service.AccountService;
 import de.thws.milu.domain.model.Account;
+import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.*;
@@ -22,6 +23,7 @@ public class AccountResource {
         this.accountService = accountService;
     }
 
+    @UnitOfWork
     @GET
     public Response getAccounts() {
 
