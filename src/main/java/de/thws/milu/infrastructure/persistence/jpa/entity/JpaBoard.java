@@ -1,14 +1,14 @@
-package de.thws.milu.infrastructure.persistence.entity;
+package de.thws.milu.infrastructure.persistence.jpa.entity;
 
-import de.thws.milu.domain.model.Account;
+import de.thws.milu.domain.model.Board;
 import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "account")
-public class JpaAccount implements Account {
+@Table(name = "board")
+public class JpaBoard implements Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -18,16 +18,18 @@ public class JpaAccount implements Account {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "account_id")
-    private List<JpaBoard> boards;
+    @Column(name = "description")
+    private String description;
 
-    public JpaAccount() {}
+    @OneToMany(mappedBy = "parentBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JpaTodo> todos;
+
+    public JpaBoard() {}
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof JpaAccount that)) return false;
+        if (!(o instanceof JpaBoard that)) return false;
         return Objects.equals(getId(), that.getId());
     }
 
@@ -55,11 +57,20 @@ public class JpaAccount implements Account {
     }
 
     @Override
-    public List<JpaBoard> getBoards() {
-        return boards;
+    public String getDescription() {
+        return description;
     }
 
-    public void setBoards(List<JpaBoard> boards) {
-        this.boards = boards;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public List<JpaTodo> getTodos() {
+        return todos;
+    }
+
+    public void setTodos(List<JpaTodo> todos) {
+        this.todos = todos;
     }
 }

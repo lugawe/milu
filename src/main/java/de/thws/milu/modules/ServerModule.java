@@ -4,9 +4,9 @@ import com.google.inject.AbstractModule;
 import de.thws.milu.domain.repository.AccountRepository;
 import de.thws.milu.domain.repository.BoardRepository;
 import de.thws.milu.domain.repository.TodoRepository;
-import de.thws.milu.infrastructure.persistence.JpaAccountRepository;
-import de.thws.milu.infrastructure.persistence.JpaBoardRepository;
-import de.thws.milu.infrastructure.persistence.JpaTodoRepository;
+import de.thws.milu.infrastructure.persistence.jpa.JpaAccountRepository;
+import de.thws.milu.infrastructure.persistence.jpa.JpaBoardRepository;
+import de.thws.milu.infrastructure.persistence.jpa.JpaTodoRepository;
 
 public class ServerModule extends AbstractModule {
 

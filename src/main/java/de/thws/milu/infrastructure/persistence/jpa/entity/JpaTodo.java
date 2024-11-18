@@ -1,4 +1,4 @@
-package de.thws.milu.infrastructure.persistence.entity;
+package de.thws.milu.infrastructure.persistence.jpa.entity;
 
 import de.thws.milu.domain.model.Todo;
 import jakarta.persistence.*;

@@ -1,4 +1,4 @@
-package de.thws.milu.infrastructure.persistence;
+package de.thws.milu.infrastructure.persistence.jpa;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;

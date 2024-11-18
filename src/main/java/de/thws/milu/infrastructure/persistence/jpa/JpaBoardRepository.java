@@ -1,4 +1,4 @@
-package de.thws.milu.infrastructure.persistence;
+package de.thws.milu.infrastructure.persistence.jpa;
 
 import de.thws.milu.domain.model.Board;
 import de.thws.milu.domain.repository.BoardRepository;
