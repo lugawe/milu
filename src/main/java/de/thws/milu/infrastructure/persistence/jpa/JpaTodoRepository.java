@@ -58,7 +58,7 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepository {
 
         int n = entityManager.createQuery(deleteById).executeUpdate();
         if (n == 0) {
-            throw new NoValuesAffectedException();
+            throw new NoValuesAffectedException(String.format("cannot deleteById %s", id));
         }
     }
 }

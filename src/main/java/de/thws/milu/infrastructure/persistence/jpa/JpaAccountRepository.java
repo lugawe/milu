@@ -76,7 +76,7 @@ public class JpaAccountRepository extends JpaRepository implements AccountReposi
 
         int n = entityManager.createQuery(deleteById).executeUpdate();
         if (n == 0) {
-            throw new NoValuesAffectedException();
+            throw new NoValuesAffectedException(String.format("cannot deleteById %s", id));
         }
     }
 }
