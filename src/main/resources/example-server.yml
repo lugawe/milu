@@ -1,3 +1,8 @@
+logging:
+  level: INFO
+  appenders:
+    - type: console
+
 server:
   applicationConnectors:
     - type: http
