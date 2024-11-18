@@ -5,13 +5,17 @@ import jakarta.persistence.EntityManagerFactory;
 
 public abstract class JpaRepository {
 
-    private final EntityManagerFactory entityManagerFactory;
+    private final JpaFactory jpaFactory;
 
-    protected JpaRepository(EntityManagerFactory entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
+    protected JpaRepository(JpaFactory jpaFactory) {
+        this.jpaFactory = jpaFactory;
+    }
+
+    protected EntityManagerFactory getEntityManagerFactory() {
+        return jpaFactory.getEntityManagerFactory();
     }
 
     protected EntityManager getEntityManager() {
-        return entityManagerFactory.createEntityManager();
+        return jpaFactory.getEntityManager();
     }
 }

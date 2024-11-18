@@ -5,7 +5,6 @@ import de.thws.milu.domain.repository.BoardRepository;
 import de.thws.milu.infrastructure.persistence.jpa.entity.JpaBoard;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -16,8 +15,8 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
     private static final Logger log = LoggerFactory.getLogger(JpaBoardRepository.class);
 
     @Inject
-    public JpaBoardRepository(EntityManagerFactory entityManagerFactory) {
-        super(entityManagerFactory);
+    public JpaBoardRepository(JpaFactory jpaFactory) {
+        super(jpaFactory);
     }
 
     @Override

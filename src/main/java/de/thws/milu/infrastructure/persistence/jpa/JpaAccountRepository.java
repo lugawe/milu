@@ -5,7 +5,6 @@ import de.thws.milu.domain.repository.AccountRepository;
 import de.thws.milu.infrastructure.persistence.jpa.entity.JpaAccount;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -20,8 +19,8 @@ public class JpaAccountRepository extends JpaRepository implements AccountReposi
     private static final Logger log = LoggerFactory.getLogger(JpaAccountRepository.class);
 
     @Inject
-    public JpaAccountRepository(EntityManagerFactory entityManagerFactory) {
-        super(entityManagerFactory);
+    public JpaAccountRepository(JpaFactory jpaFactory) {
+        super(jpaFactory);
     }
 
     @Override
