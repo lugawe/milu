@@ -9,6 +9,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Singleton
 @Path("/account")
@@ -25,10 +27,34 @@ public class AccountResource {
 
     @UnitOfWork
     @GET
-    public Response getAccounts() {
+    @Path("/{accountId}")
+    public Response getById(@PathParam("accountId") UUID id) {
 
-        List<Account> accounts = accountService.getAccounts();
+        Optional<Account> account = accountService.getById(id);
+        if (account.isEmpty()) {
+            return Response.noContent().build();
+        }
+
+        return Response.ok(account.get()).build();
+    }
+
+    @UnitOfWork
+    @GET
+    @Path("/")
+    public Response getAll() {
+
+        List<Account> accounts = accountService.getAll();
 
         return Response.ok(accounts).build();
+    }
+
+    @UnitOfWork
+    @DELETE
+    @Path("/{accountId}")
+    public Response deleteById(@PathParam("accountId") UUID id) {
+
+        accountService.deleteById(id);
+
+        return Response.ok().build();
     }
 }
