@@ -1,10 +1,14 @@
 package de.thws.milu.infrastructure.persistence.jpa;
 
+import de.thws.milu.domain.exception.NoValuesAffectedException;
 import de.thws.milu.domain.model.Todo;
 import de.thws.milu.domain.repository.TodoRepository;
 import de.thws.milu.infrastructure.persistence.jpa.entity.JpaTodo;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.Root;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -40,5 +44,21 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepository {
     }
 
     @Override
-    public void deleteById(UUID id) {}
+    public void deleteById(UUID id) {
+
+        log.debug("deleteById: {}", id);
+
+        EntityManager entityManager = getEntityManager();
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaDelete<JpaTodo> criteriaDelete = criteriaBuilder.createCriteriaDelete(JpaTodo.class);
+        Root<JpaTodo> root = criteriaDelete.from(JpaTodo.class);
+
+        CriteriaDelete<JpaTodo> deleteById = criteriaDelete.where(criteriaBuilder.equal(root.get("id"), id));
+
+        int n = entityManager.createQuery(deleteById).executeUpdate();
+        if (n == 0) {
+            throw new NoValuesAffectedException();
+        }
+    }
 }

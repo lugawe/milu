@@ -1,13 +1,15 @@
 package de.thws.milu.infrastructure.persistence.jpa;
 
+import de.thws.milu.domain.exception.NoValuesAffectedException;
 import de.thws.milu.domain.model.Account;
 import de.thws.milu.domain.repository.AccountRepository;
 import de.thws.milu.infrastructure.persistence.jpa.entity.JpaAccount;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,12 +45,11 @@ public class JpaAccountRepository extends JpaRepository implements AccountReposi
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<JpaAccount> criteriaQuery = criteriaBuilder.createQuery(JpaAccount.class);
+        Root<JpaAccount> root = criteriaQuery.from(JpaAccount.class);
 
-        CriteriaQuery<JpaAccount> selectAll = criteriaQuery.select(criteriaQuery.from(JpaAccount.class));
+        CriteriaQuery<JpaAccount> selectAll = criteriaQuery.select(root);
 
-        TypedQuery<JpaAccount> query = entityManager.createQuery(selectAll);
-
-        return query.getResultList();
+        return entityManager.createQuery(selectAll).getResultList();
     }
 
     @Override
@@ -61,5 +62,21 @@ public class JpaAccountRepository extends JpaRepository implements AccountReposi
     }
 
     @Override
-    public void deleteById(UUID id) {}
+    public void deleteById(UUID id) {
+
+        log.debug("deleteById: {}", id);
+
+        EntityManager entityManager = getEntityManager();
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaDelete<JpaAccount> criteriaDelete = criteriaBuilder.createCriteriaDelete(JpaAccount.class);
+        Root<JpaAccount> root = criteriaDelete.from(JpaAccount.class);
+
+        CriteriaDelete<JpaAccount> deleteById = criteriaDelete.where(criteriaBuilder.equal(root.get("id"), id));
+
+        int n = entityManager.createQuery(deleteById).executeUpdate();
+        if (n == 0) {
+            throw new NoValuesAffectedException();
+        }
+    }
 }

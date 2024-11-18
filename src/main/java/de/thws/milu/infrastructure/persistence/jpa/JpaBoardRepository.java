@@ -1,10 +1,14 @@
 package de.thws.milu.infrastructure.persistence.jpa;
 
+import de.thws.milu.domain.exception.NoValuesAffectedException;
 import de.thws.milu.domain.model.Board;
 import de.thws.milu.domain.repository.BoardRepository;
 import de.thws.milu.infrastructure.persistence.jpa.entity.JpaBoard;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.Root;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -40,5 +44,21 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
     }
 
     @Override
-    public void deleteById(UUID id) {}
+    public void deleteById(UUID id) {
+
+        log.debug("deleteById: {}", id);
+
+        EntityManager entityManager = getEntityManager();
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaDelete<JpaBoard> criteriaDelete = criteriaBuilder.createCriteriaDelete(JpaBoard.class);
+        Root<JpaBoard> root = criteriaDelete.from(JpaBoard.class);
+
+        CriteriaDelete<JpaBoard> deleteById = criteriaDelete.where(criteriaBuilder.equal(root.get("id"), id));
+
+        int n = entityManager.createQuery(deleteById).executeUpdate();
+        if (n == 0) {
+            throw new NoValuesAffectedException();
+        }
+    }
 }
