@@ -6,6 +6,10 @@ import de.thws.milu.infrastructure.persistence.jpa.entity.JpaAccount;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -29,6 +33,23 @@ public class JpaAccountRepository extends JpaRepository implements AccountReposi
         JpaAccount account = entityManager.find(JpaAccount.class, id);
 
         return Optional.ofNullable(account);
+    }
+
+    @Override
+    public List<? extends Account> getAll() {
+
+        log.debug("getAll");
+
+        EntityManager entityManager = getEntityManager();
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<JpaAccount> criteriaQuery = criteriaBuilder.createQuery(JpaAccount.class);
+
+        CriteriaQuery<JpaAccount> selectAll = criteriaQuery.select(criteriaQuery.from(JpaAccount.class));
+
+        TypedQuery<JpaAccount> query = entityManager.createQuery(selectAll);
+
+        return query.getResultList();
     }
 
     @Override
