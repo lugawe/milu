@@ -22,7 +22,7 @@ public class HibernateServerModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(SessionFactory.class).toProvider(sessionFactoryProvider);
+        bind(SessionFactory.class).toProvider(sessionFactoryProvider).asEagerSingleton();
         bind(JpaFactory.class).to(HibernateJpaFactory.class);
         bind(AccountRepository.class).to(JpaAccountRepository.class);
         bind(BoardRepository.class).to(JpaBoardRepository.class);
