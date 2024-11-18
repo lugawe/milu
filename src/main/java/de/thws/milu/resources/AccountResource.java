@@ -49,6 +49,14 @@ public class AccountResource {
     }
 
     @UnitOfWork
+    @POST
+    @Path("/")
+    public Response save() {
+
+        return Response.ok().build();
+    }
+
+    @UnitOfWork
     @DELETE
     @Path("/{accountId}")
     public Response deleteById(@PathParam("accountId") UUID id) {
