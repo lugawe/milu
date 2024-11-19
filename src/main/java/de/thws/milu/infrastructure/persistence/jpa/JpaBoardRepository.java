@@ -6,9 +6,7 @@ import de.thws.milu.domain.repository.BoardRepository;
 import de.thws.milu.infrastructure.persistence.jpa.entity.JpaBoard;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaDelete;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.Query;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -29,6 +27,7 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
         log.debug("getById: {}", id);
 
         EntityManager entityManager = getEntityManager();
+
         JpaBoard board = entityManager.find(JpaBoard.class, id);
 
         return Optional.ofNullable(board);
@@ -50,13 +49,10 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
 
         EntityManager entityManager = getEntityManager();
 
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaDelete<JpaBoard> criteriaDelete = criteriaBuilder.createCriteriaDelete(JpaBoard.class);
-        Root<JpaBoard> root = criteriaDelete.from(JpaBoard.class);
+        Query deleteQuery = entityManager.createQuery("delete from JpaBoard a where a.id = :id");
+        deleteQuery.setParameter("id", id);
 
-        CriteriaDelete<JpaBoard> deleteById = criteriaDelete.where(criteriaBuilder.equal(root.get("id"), id));
-
-        int n = entityManager.createQuery(deleteById).executeUpdate();
+        int n = deleteQuery.executeUpdate();
         if (n == 0) {
             throw new NoValuesAffectedException(String.format("cannot deleteById %s", id));
         }

@@ -6,9 +6,7 @@ import de.thws.milu.domain.repository.TodoRepository;
 import de.thws.milu.infrastructure.persistence.jpa.entity.JpaTodo;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaDelete;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.Query;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -29,6 +27,7 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepository {
         log.debug("getById: {}", id);
 
         EntityManager entityManager = getEntityManager();
+
         JpaTodo todo = entityManager.find(JpaTodo.class, id);
 
         return Optional.ofNullable(todo);
@@ -50,13 +49,10 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepository {
 
         EntityManager entityManager = getEntityManager();
 
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaDelete<JpaTodo> criteriaDelete = criteriaBuilder.createCriteriaDelete(JpaTodo.class);
-        Root<JpaTodo> root = criteriaDelete.from(JpaTodo.class);
+        Query deleteQuery = entityManager.createQuery("delete from JpaTodo a where a.id = :id");
+        deleteQuery.setParameter("id", id);
 
-        CriteriaDelete<JpaTodo> deleteById = criteriaDelete.where(criteriaBuilder.equal(root.get("id"), id));
-
-        int n = entityManager.createQuery(deleteById).executeUpdate();
+        int n = deleteQuery.executeUpdate();
         if (n == 0) {
             throw new NoValuesAffectedException(String.format("cannot deleteById %s", id));
         }
