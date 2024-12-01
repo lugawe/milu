@@ -1,4 +1,4 @@
-package de.thws.milu.application.service;
+package de.thws.milu.domain.service;
 
 import de.thws.milu.domain.model.Account;
 import de.thws.milu.domain.repository.AccountRepository;

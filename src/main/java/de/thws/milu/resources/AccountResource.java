@@ -1,7 +1,7 @@
 package de.thws.milu.resources;
 
-import de.thws.milu.application.service.AccountService;
 import de.thws.milu.domain.model.Account;
+import de.thws.milu.domain.service.AccountService;
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
