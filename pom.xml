@@ -24,6 +24,7 @@
         <dropwizard-guicey.version>7.1.4</dropwizard-guicey.version>
         <jakarta.persistence-api.version>3.1.0</jakarta.persistence-api.version>
         <hibernate-core.version>6.6.2.Final</hibernate-core.version>
+        <java-jwt.version>4.4.0</java-jwt.version>
         <guava.version>33.3.1-jre</guava.version>
         <!-- jdbc dependencies -->
         <h2.version>2.3.232</h2.version>
@@ -81,6 +82,12 @@
             <groupId>ru.vyarus</groupId>
             <artifactId>dropwizard-guicey</artifactId>
             <version>${dropwizard-guicey.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${java-jwt.version}</version>
         </dependency>
 
         <dependency>
