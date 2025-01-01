@@ -25,12 +25,12 @@
         <jakarta.persistence-api.version>3.1.0</jakarta.persistence-api.version>
         <hibernate-core.version>6.6.2.Final</hibernate-core.version>
         <java-jwt.version>4.4.0</java-jwt.version>
-        <guava.version>33.3.1-jre</guava.version>
+        <guava.version>33.4.0-jre</guava.version>
         <!-- jdbc dependencies -->
         <h2.version>2.3.232</h2.version>
         <postgresql.version>42.7.4</postgresql.version>
         <!-- testing dependencies -->
-        <junit.version>5.11.3</junit.version>
+        <junit.version>5.11.4</junit.version>
         <mockito.version>5.14.2</mockito.version>
     </properties>
 
