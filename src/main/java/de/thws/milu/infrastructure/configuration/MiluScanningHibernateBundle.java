@@ -5,7 +5,7 @@ import io.dropwizard.hibernate.ScanningHibernateBundle;
 
 public class MiluScanningHibernateBundle extends ScanningHibernateBundle<MiluServerConfiguration> {
 
-    public static final String ENTITY_PACKAGE = "de.thws.milu.infrastructure.persistence.jpa.entity";
+    public static final String ENTITY_PACKAGE = "de.thws.milu.adapter.out.persistence.jpa.entity";
 
     public MiluScanningHibernateBundle() {
         super(ENTITY_PACKAGE);
