@@ -31,7 +31,7 @@
         <postgresql.version>42.7.4</postgresql.version>
         <!-- testing dependencies -->
         <junit.version>5.11.4</junit.version>
-        <mockito.version>5.14.2</mockito.version>
+        <mockito.version>5.15.2</mockito.version>
     </properties>
 
     <dependencies>
