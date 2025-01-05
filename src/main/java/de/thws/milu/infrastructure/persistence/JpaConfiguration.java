@@ -1,8 +1,8 @@
 package de.thws.milu.infrastructure.persistence;
 
 import de.thws.milu.adapter.out.persistence.jpa.JpaAccountRepository;
-import de.thws.milu.application.service.AccountService;
 import de.thws.milu.application.port.out.AccountRepository;
+import de.thws.milu.application.service.AccountService;
 
 public class JpaConfiguration {
 

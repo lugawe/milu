@@ -1,9 +1,9 @@
 package de.thws.milu.adapter.out.persistence.jpa;
 
+import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
+import de.thws.milu.application.port.out.BoardRepository;
 import de.thws.milu.core.domain.exception.NoValuesAffectedException;
 import de.thws.milu.core.domain.model.Board;
-import de.thws.milu.application.port.out.BoardRepository;
-import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;

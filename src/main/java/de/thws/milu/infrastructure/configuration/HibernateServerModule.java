@@ -1,14 +1,14 @@
 package de.thws.milu.infrastructure.configuration;
 
 import com.google.inject.AbstractModule;
-import de.thws.milu.application.port.out.AccountRepository;
-import de.thws.milu.application.port.out.BoardRepository;
-import de.thws.milu.application.port.out.TodoRepository;
 import de.thws.milu.adapter.out.persistence.hibernate.HibernateJpaFactory;
 import de.thws.milu.adapter.out.persistence.jpa.JpaAccountRepository;
 import de.thws.milu.adapter.out.persistence.jpa.JpaBoardRepository;
 import de.thws.milu.adapter.out.persistence.jpa.JpaFactory;
 import de.thws.milu.adapter.out.persistence.jpa.JpaTodoRepository;
+import de.thws.milu.application.port.out.AccountRepository;
+import de.thws.milu.application.port.out.BoardRepository;
+import de.thws.milu.application.port.out.TodoRepository;
 import jakarta.inject.Provider;
 import org.hibernate.SessionFactory;
 
