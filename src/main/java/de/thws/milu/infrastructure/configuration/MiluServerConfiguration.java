@@ -12,6 +12,10 @@ public class MiluServerConfiguration extends Configuration {
     @NotNull
     private DataSourceFactory database = new DataSourceFactory();
 
+    @Valid
+    @NotNull
+    private JwtConfiguration jwtConfiguration = new JwtConfiguration();
+
     public MiluServerConfiguration() {}
 
     @JsonProperty("database")
@@ -22,5 +26,15 @@ public class MiluServerConfiguration extends Configuration {
     @JsonProperty("database")
     public void setDataSourceFactory(DataSourceFactory dataSourceFactory) {
         this.database = dataSourceFactory;
+    }
+
+    @JsonProperty("jwt")
+    public JwtConfiguration getJwtConfiguration() {
+        return jwtConfiguration;
+    }
+
+    @JsonProperty("jwt")
+    public void setJwtConfiguration(JwtConfiguration jwtConfiguration) {
+        this.jwtConfiguration = jwtConfiguration;
     }
 }
