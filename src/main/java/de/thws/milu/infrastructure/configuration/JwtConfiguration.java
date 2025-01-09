@@ -10,6 +10,10 @@ public class JwtConfiguration {
     @NotNull
     private String secret;
 
+    @Valid
+    @NotNull
+    private int lifetime;
+
     public JwtConfiguration() {}
 
     @JsonProperty("secret")
@@ -20,5 +24,15 @@ public class JwtConfiguration {
     @JsonProperty("secret")
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+
+    @JsonProperty("lifetime")
+    public int getLifetime() {
+        return lifetime;
+    }
+
+    @JsonProperty("lifetime")
+    public void setLifetime(int lifetime) {
+        this.lifetime = lifetime;
     }
 }
