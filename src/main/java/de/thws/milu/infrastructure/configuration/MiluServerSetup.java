@@ -1,11 +1,12 @@
 package de.thws.milu.infrastructure.configuration;
 
-import com.google.inject.AbstractModule;
 import io.dropwizard.core.ConfiguredBundle;
 import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
+import ru.vyarus.dropwizard.guice.module.support.DropwizardAwareModule;
 
-public class MiluServerSetup extends AbstractModule implements ConfiguredBundle<MiluServerConfiguration> {
+public class MiluServerSetup extends DropwizardAwareModule<MiluServerConfiguration>
+        implements ConfiguredBundle<MiluServerConfiguration> {
 
     private final MiluScanningHibernateBundle hibernateBundle = new MiluScanningHibernateBundle();
 
@@ -13,6 +14,7 @@ public class MiluServerSetup extends AbstractModule implements ConfiguredBundle<
 
     @Override
     protected void configure() {
+        install(new JwtAuthServerModule(configuration().getJwtConfiguration()));
         install(new HibernateServerModule(hibernateBundle::getSessionFactory));
     }
 
