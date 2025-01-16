@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import de.thws.milu.util.Mapper;
 import java.security.Principal;
+import java.time.Duration;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +17,9 @@ public class JwtHandler {
     public static final String USER_CLAIM = "user";
 
     private final Algorithm algorithm;
-    private final int lifetime;
+    private final Duration lifetime;
 
-    public JwtHandler(String secret, int lifetime) {
+    public JwtHandler(String secret, Duration lifetime) {
         this.algorithm = Algorithm.HMAC512(Objects.requireNonNull(secret, "secret"));
         this.lifetime = lifetime;
     }
@@ -31,7 +32,7 @@ public class JwtHandler {
 
         String id = UUID.randomUUID().toString();
         Date issuedAt = new Date();
-        Date expiresAt = new Date(issuedAt.getTime() + 1000L * 60 * lifetime);
+        Date expiresAt = new Date(issuedAt.getTime() + lifetime.toMillis());
         Map<String, ?> mappedPrincipal = map(principal);
 
         String token = JWT.create()

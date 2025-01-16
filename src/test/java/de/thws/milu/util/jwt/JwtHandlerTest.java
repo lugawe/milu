@@ -3,6 +3,7 @@ package de.thws.milu.util.jwt;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.security.Principal;
+import java.time.Duration;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ class JwtHandlerTest {
 
     @BeforeAll
     static void beforeAll() {
-        jwtHandler = new JwtHandler("secret1234", 10);
+        jwtHandler = new JwtHandler("secret1234", Duration.ofSeconds(10));
     }
 
     String createTestToken() {
