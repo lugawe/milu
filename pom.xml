@@ -20,10 +20,8 @@
         <java.version>21</java.version>
         <java.mainClass>de.thws.milu.infrastructure.MiluServer</java.mainClass>
         <!-- server dependencies -->
-        <dropwizard.version>4.0.11</dropwizard.version>
-        <dropwizard-guicey.version>7.1.4</dropwizard-guicey.version>
-        <jakarta.persistence-api.version>3.1.0</jakarta.persistence-api.version>
-        <hibernate-core.version>6.6.2.Final</hibernate-core.version>
+        <dropwizard.version>5.0.0-rc.1</dropwizard.version>
+        <dropwizard-guicey.version>8.0.0-rc.1</dropwizard-guicey.version>
         <java-jwt.version>4.4.0</java-jwt.version>
         <guava.version>33.4.0-jre</guava.version>
         <!-- jdbc dependencies -->
@@ -48,28 +46,6 @@
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-hibernate</artifactId>
             <version>${dropwizard.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>jakarta.persistence</groupId>
-                    <artifactId>jakarta.persistence-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.hibernate.orm</groupId>
-                    <artifactId>hibernate-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
-            <version>${jakarta.persistence-api.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${hibernate-core.version}</version>
         </dependency>
 
         <dependency>
