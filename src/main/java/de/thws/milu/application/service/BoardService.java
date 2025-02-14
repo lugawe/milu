@@ -24,6 +24,11 @@ public class BoardService implements BoardServicePort {
     }
 
     @Override
+    public List<Board> getAll() {
+        return boardRepository.getAll().stream().map(a -> (Board) a).toList();
+    }
+
+    @Override
     public void save(Board board) {
         boardRepository.save(board);
     }

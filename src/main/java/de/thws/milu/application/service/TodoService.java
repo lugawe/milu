@@ -1,6 +1,7 @@
 package de.thws.milu.application.service;
 
 import com.google.inject.Inject;
+import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Todo;
 import de.thws.milu.core.port.in.TodoServicePort;
 import de.thws.milu.core.port.out.TodoRepositoryPort;
@@ -21,6 +22,11 @@ public class TodoService implements TodoServicePort {
     @Override
     public Optional<Todo> getById(UUID id) {
         return todoRepository.getById(id);
+    }
+
+    @Override
+    public List<Todo> getAll() {
+        return todoRepository.getAll().stream().map(a -> (Todo) a).toList();
     }
 
     @Override

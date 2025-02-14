@@ -1,12 +1,16 @@
 package de.thws.milu.core.port.in;
 
+import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Todo;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface TodoServicePort {
     Optional<Todo> getById(UUID id);
+
+    List<? extends Todo> getAll();
 
     void save(Todo todo);
 

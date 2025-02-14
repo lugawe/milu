@@ -1,17 +1,21 @@
 package de.thws.milu.adapter.out.persistence.jpa;
 
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
+import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
 import de.thws.milu.core.domain.exception.NoValuesAffectedException;
 import de.thws.milu.core.domain.model.Board;
+import de.thws.milu.core.domain.model.Todo;
 import de.thws.milu.core.port.out.BoardRepositoryPort;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,6 +37,22 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
         JpaBoard board = entityManager.find(JpaBoard.class, id);
 
         return Optional.ofNullable(board);
+    }
+
+    @Override
+    public List<? extends Board> getAll() {
+
+        log.debug("getAll");
+
+        EntityManager entityManager = getEntityManager();
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<JpaBoard> criteriaQuery = criteriaBuilder.createQuery(JpaBoard.class);
+        Root<JpaBoard> root = criteriaQuery.from(JpaBoard.class);
+
+        CriteriaQuery<JpaBoard> selectAll = criteriaQuery.select(root);
+
+        return entityManager.createQuery(selectAll).getResultList();
     }
 
     @Override

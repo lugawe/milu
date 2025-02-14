@@ -1,17 +1,21 @@
 package de.thws.milu.adapter.out.persistence.jpa;
 
+import de.thws.milu.adapter.out.persistence.jpa.entity.JpaAccount;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
 import de.thws.milu.core.domain.exception.NoValuesAffectedException;
+import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Todo;
 import de.thws.milu.core.port.out.TodoRepositoryPort;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,6 +37,22 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
         JpaTodo todo = entityManager.find(JpaTodo.class, id);
 
         return Optional.ofNullable(todo);
+    }
+
+    @Override
+    public List<? extends Todo> getAll() {
+
+        log.debug("getAll");
+
+        EntityManager entityManager = getEntityManager();
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<JpaTodo> criteriaQuery = criteriaBuilder.createQuery(JpaTodo.class);
+        Root<JpaTodo> root = criteriaQuery.from(JpaTodo.class);
+
+        CriteriaQuery<JpaTodo> selectAll = criteriaQuery.select(root);
+
+        return entityManager.createQuery(selectAll).getResultList();
     }
 
     @Override
