@@ -1,20 +1,21 @@
 package de.thws.milu.adapter.out.persistence.jpa;
 
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
-import de.thws.milu.application.port.out.TodoRepository;
 import de.thws.milu.core.domain.exception.NoValuesAffectedException;
 import de.thws.milu.core.domain.model.Todo;
+import de.thws.milu.core.port.out.TodoRepositoryPort;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.Root;
-import java.util.Optional;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JpaTodoRepository extends JpaRepository implements TodoRepository {
+import java.util.Optional;
+import java.util.UUID;
+
+public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPort {
 
     private static final Logger log = LoggerFactory.getLogger(JpaTodoRepository.class);
 

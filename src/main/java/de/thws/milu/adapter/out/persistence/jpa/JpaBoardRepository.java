@@ -1,20 +1,21 @@
 package de.thws.milu.adapter.out.persistence.jpa;
 
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
-import de.thws.milu.application.port.out.BoardRepository;
 import de.thws.milu.core.domain.exception.NoValuesAffectedException;
 import de.thws.milu.core.domain.model.Board;
+import de.thws.milu.core.port.out.BoardRepositoryPort;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.Root;
-import java.util.Optional;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JpaBoardRepository extends JpaRepository implements BoardRepository {
+import java.util.Optional;
+import java.util.UUID;
+
+public class JpaBoardRepository extends JpaRepository implements BoardRepositoryPort {
 
     private static final Logger log = LoggerFactory.getLogger(JpaBoardRepository.class);
 

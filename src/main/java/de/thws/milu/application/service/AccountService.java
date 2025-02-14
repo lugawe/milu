@@ -1,33 +1,39 @@
 package de.thws.milu.application.service;
 
-import de.thws.milu.application.port.out.AccountRepository;
 import de.thws.milu.core.domain.model.Account;
+import de.thws.milu.core.port.in.AccountServicePort;
+import de.thws.milu.core.port.out.AccountRepositoryPort;
 import jakarta.inject.Inject;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class AccountService {
+public class AccountService implements AccountServicePort {
 
-    private final AccountRepository accountRepository;
+    private final AccountRepositoryPort accountRepository;
 
     @Inject
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepositoryPort accountRepository) {
         this.accountRepository = accountRepository;
     }
 
+    @Override
     public Optional<Account> getById(UUID id) {
         return accountRepository.getById(id);
     }
 
+    @Override
     public List<Account> getAll() {
         return accountRepository.getAll().stream().map(a -> (Account) a).toList();
     }
 
+    @Override
     public void save(Account account) {
         accountRepository.save(account);
     }
 
+    @Override
     public void deleteById(UUID id) {
         accountRepository.deleteById(id);
     }

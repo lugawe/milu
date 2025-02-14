@@ -6,9 +6,9 @@ import de.thws.milu.adapter.out.persistence.jpa.JpaAccountRepository;
 import de.thws.milu.adapter.out.persistence.jpa.JpaBoardRepository;
 import de.thws.milu.adapter.out.persistence.jpa.JpaFactory;
 import de.thws.milu.adapter.out.persistence.jpa.JpaTodoRepository;
-import de.thws.milu.application.port.out.AccountRepository;
-import de.thws.milu.application.port.out.BoardRepository;
-import de.thws.milu.application.port.out.TodoRepository;
+import de.thws.milu.core.port.out.AccountRepositoryPort;
+import de.thws.milu.core.port.out.BoardRepositoryPort;
+import de.thws.milu.core.port.out.TodoRepositoryPort;
 import jakarta.inject.Provider;
 import org.hibernate.SessionFactory;
 
@@ -24,8 +24,8 @@ public class HibernateServerModule extends AbstractModule {
     protected void configure() {
         bind(SessionFactory.class).toProvider(sessionFactoryProvider).asEagerSingleton();
         bind(JpaFactory.class).to(HibernateJpaFactory.class);
-        bind(AccountRepository.class).to(JpaAccountRepository.class);
-        bind(BoardRepository.class).to(JpaBoardRepository.class);
-        bind(TodoRepository.class).to(JpaTodoRepository.class);
+        bind(AccountRepositoryPort.class).to(JpaAccountRepository.class);
+        bind(BoardRepositoryPort.class).to(JpaBoardRepository.class);
+        bind(TodoRepositoryPort.class).to(JpaTodoRepository.class);
     }
 }
