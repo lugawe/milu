@@ -25,7 +25,7 @@ public class AccountService implements AccountServicePort {
 
     @Override
     public Optional<Account> getById(UUID id) {
-        return accountRepository.getById(id);
+        return accountRepository.getById(id).map(JsonAccount::new);
     }
 
     @Override
@@ -36,8 +36,10 @@ public class AccountService implements AccountServicePort {
         if (accountOptional.isPresent()) {
             Account account = accountOptional.get();
 
-            //if (BCryptUtils.check(plainPassword, account.getPassword())) {
-            return Optional.of(account);
+            // normalerweise als hash in database
+            if (plainPassword.equals(account.getPassword())) {
+                return Optional.of(new JsonAccount(account));
+            }
         }
 
         return Optional.empty();
@@ -46,20 +48,20 @@ public class AccountService implements AccountServicePort {
     @Override
     public List<Account> getAll(String name, int limit, int offset) {
         if (name != null && !name.trim().isEmpty()) {
-            return accountRepository.findByName(name, limit, offset).stream().map(a -> (Account) a).toList();
+            return accountRepository.findByName(name, limit, offset).stream().map(a -> (Account) new JsonAccount(a)).toList();
         } else {
-            return accountRepository.getAll(limit, offset).stream().map(a -> (Account) a).toList();
+            return accountRepository.getAll(limit, offset).stream().map(a -> (Account) new JsonAccount(a)).toList();
         }
     }
 
     @Override
-    public void save(Account account) {
-        accountRepository.save(account);
+    public Account save(Account account) {
+        return new JsonAccount(accountRepository.save(account));
     }
 
     @Override
-    public void update(UUID id, JsonAccount account) {
-        accountRepository.update(id, account);
+    public Account update(UUID id, Account account) {
+        return new JsonAccount(accountRepository.update(id, account));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package de.thws.milu.core.port.out;
 
-import de.thws.milu.adapter.in.json.JsonAccount;
 import de.thws.milu.core.domain.model.Account;
 
 import java.util.List;
@@ -16,9 +15,9 @@ public interface AccountRepositoryPort {
 
     List<? extends Account> findByName(String name, int limit, int offset);
 
-    void save(Account account);
+    Account save(Account account);
 
-    void update(UUID id, JsonAccount account);
+    Account update(UUID id, Account account);
 
     void deleteById(UUID id);
 }

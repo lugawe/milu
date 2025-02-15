@@ -1,11 +1,8 @@
 package de.thws.milu.adapter.out.persistence.jpa;
 
-import de.thws.milu.adapter.in.json.JsonAccount;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaAccount;
-import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
 import de.thws.milu.core.domain.exception.NoValuesAffectedException;
 import de.thws.milu.core.domain.model.Account;
-import de.thws.milu.core.domain.model.Board;
 import de.thws.milu.core.port.out.AccountRepositoryPort;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -17,7 +14,6 @@ import jakarta.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -85,16 +81,18 @@ public class JpaAccountRepository extends JpaRepository implements AccountReposi
     }
 
     @Override
-    public void save(Account account) {
+    public Account save(Account account) {
 
         log.debug("save: {}", account);
 
         EntityManager entityManager = getEntityManager();
-        entityManager.persist(account);
+        entityManager.persist(new JpaAccount(account));
+
+        return account;
     }
 
     @Override
-    public void update(UUID id, JsonAccount account) {
+    public Account update(UUID id, Account account) {
         EntityManager entityManager = getEntityManager();
 
         JpaAccount existingAccount = entityManager.find(JpaAccount.class, id);
@@ -111,6 +109,8 @@ public class JpaAccountRepository extends JpaRepository implements AccountReposi
         }
 
         entityManager.merge(existingAccount);
+
+        return existingAccount;
     }
 
     @Override

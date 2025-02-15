@@ -1,6 +1,5 @@
 package de.thws.milu.core.port.in;
 
-import de.thws.milu.adapter.in.json.JsonAccount;
 import de.thws.milu.core.domain.model.Account;
 
 import java.util.List;
@@ -13,9 +12,9 @@ public interface AccountServicePort {
     List<? extends Account> getAll(String name, int limit, int offset);
     Optional<Account> getByNameAndPassword(String name, String plainPassword);
 
-    void save(Account account);
+    Account save(Account account);
 
-    void update(UUID id, JsonAccount account);
+    Account update(UUID id, Account account);
 
     void deleteById(UUID id);
 
