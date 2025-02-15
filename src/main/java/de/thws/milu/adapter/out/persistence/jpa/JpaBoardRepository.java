@@ -91,7 +91,7 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
     }
 
     @Override
-    public void update(Account caller, UUID id, JsonBoard board) {
+    public void update(Account caller, UUID id, Board board) {
         log.debug("update Board: id={}", id);
         EntityManager em = getEntityManager();
         JpaBoard existingBoard = em.find(JpaBoard.class, id);
