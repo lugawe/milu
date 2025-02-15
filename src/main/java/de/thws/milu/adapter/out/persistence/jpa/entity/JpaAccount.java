@@ -26,6 +26,17 @@ public class JpaAccount implements Account {
     @JoinColumn(name = "account_id")
     private List<JpaBoard> boards;
 
+    public JpaAccount(Account account) {
+        this.id = account.getId();
+        this.name = account.getName();
+        this.password = account.getPassword();
+
+        List<? extends Board> boards = account.getBoards();
+        if (boards != null) {
+            this.boards = boards.stream().map(JpaBoard::new).toList();
+        }
+    }
+
     public JpaAccount() {}
 
     @Override

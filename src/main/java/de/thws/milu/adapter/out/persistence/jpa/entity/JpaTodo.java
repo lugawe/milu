@@ -1,5 +1,6 @@
 package de.thws.milu.adapter.out.persistence.jpa.entity;
 
+import de.thws.milu.core.domain.model.Board;
 import de.thws.milu.core.domain.model.Todo;
 import jakarta.persistence.*;
 import java.util.Objects;
@@ -27,6 +28,18 @@ public class JpaTodo implements Todo {
     @ManyToOne(optional = false)
     @JoinColumn(name = "parent_board")
     private JpaBoard parentBoard;
+
+    public JpaTodo(Todo todo) {
+        this.id = todo.getId();
+        this.name = todo.getName();
+        this.description = todo.getDescription();
+        this.state = todo.getState();
+
+        Board parentBoard = todo.getParentBoard();
+        if (parentBoard != null) {
+            this.parentBoard = new JpaBoard(parentBoard);
+        }
+    }
 
     public JpaTodo() {}
 

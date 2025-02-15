@@ -1,6 +1,7 @@
 package de.thws.milu.adapter.out.persistence.jpa.entity;
 
 import de.thws.milu.core.domain.model.Board;
+import de.thws.milu.core.domain.model.Todo;
 import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -27,6 +28,17 @@ public class JpaBoard implements Board {
 
     @OneToMany(mappedBy = "parentBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JpaTodo> todos;
+
+    public JpaBoard(Board board) {
+        this.id = board.getId();
+        this.name = board.getName();
+        this.description = board.getDescription();
+
+        List<? extends Todo> todos = board.getTodos();
+        if (todos != null) {
+            this.todos = todos.stream().map(JpaTodo::new).toList();
+        }
+    }
 
     public JpaBoard() {}
 
