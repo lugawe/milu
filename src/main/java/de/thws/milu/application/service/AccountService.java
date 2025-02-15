@@ -1,6 +1,7 @@
 package de.thws.milu.application.service;
 
 import de.thws.milu.adapter.in.json.JsonAccount;
+import de.thws.milu.adapter.in.json.JsonAuthAccount;
 import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.port.in.AccountServicePort;
 import de.thws.milu.core.port.out.AccountRepositoryPort;
@@ -68,6 +69,6 @@ public class AccountService implements AccountServicePort {
 
     @Override
     public String createAccessToken(Account account) {
-        return jwtHandler.encode(account);
+        return jwtHandler.encode(new JsonAuthAccount(account));
     }
 }
