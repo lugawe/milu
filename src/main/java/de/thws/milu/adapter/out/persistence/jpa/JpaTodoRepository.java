@@ -1,9 +1,7 @@
 package de.thws.milu.adapter.out.persistence.jpa;
 
-import de.thws.milu.adapter.out.persistence.jpa.entity.JpaAccount;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
 import de.thws.milu.core.domain.exception.NoValuesAffectedException;
-import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Todo;
 import de.thws.milu.core.port.out.TodoRepositoryPort;
 import jakarta.inject.Inject;

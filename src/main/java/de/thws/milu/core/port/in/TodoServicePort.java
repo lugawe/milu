@@ -1,7 +1,6 @@
 package de.thws.milu.core.port.in;
 
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
-import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Todo;
 
 import java.util.List;

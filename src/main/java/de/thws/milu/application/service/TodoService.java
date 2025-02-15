@@ -2,7 +2,6 @@ package de.thws.milu.application.service;
 
 import com.google.inject.Inject;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
-import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Todo;
 import de.thws.milu.core.port.in.TodoServicePort;
 import de.thws.milu.core.port.out.TodoRepositoryPort;

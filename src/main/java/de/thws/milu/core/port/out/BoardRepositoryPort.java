@@ -2,7 +2,6 @@ package de.thws.milu.core.port.out;
 
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
 import de.thws.milu.core.domain.model.Board;
-import de.thws.milu.core.domain.model.Todo;
 
 import java.util.List;
 import java.util.Optional;
