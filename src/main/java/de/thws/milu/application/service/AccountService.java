@@ -3,6 +3,7 @@ package de.thws.milu.application.service;
 import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.port.in.AccountServicePort;
 import de.thws.milu.core.port.out.AccountRepositoryPort;
+import de.thws.milu.util.jwt.JwtHandler;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -12,10 +13,12 @@ import java.util.UUID;
 public class AccountService implements AccountServicePort {
 
     private final AccountRepositoryPort accountRepository;
+    private final JwtHandler jwtHandler;
 
     @Inject
-    public AccountService(AccountRepositoryPort accountRepository) {
+    public AccountService(AccountRepositoryPort accountRepository, JwtHandler jwtHandler) {
         this.accountRepository = accountRepository;
+        this.jwtHandler = jwtHandler;
     }
 
     @Override
@@ -51,5 +54,10 @@ public class AccountService implements AccountServicePort {
     @Override
     public void deleteById(UUID id) {
         accountRepository.deleteById(id);
+    }
+
+    @Override
+    public String createAccessToken(Account account) {
+        return jwtHandler.encode(account);
     }
 }

@@ -16,4 +16,6 @@ public interface AccountServicePort {
     void save(Account account);
 
     void deleteById(UUID id);
+
+    String createAccessToken(Account account);
 }
