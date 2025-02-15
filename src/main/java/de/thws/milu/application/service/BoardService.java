@@ -2,10 +2,10 @@ package de.thws.milu.application.service;
 
 import com.google.inject.Inject;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
+import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Board;
 import de.thws.milu.core.port.in.BoardServicePort;
 import de.thws.milu.core.port.out.BoardRepositoryPort;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,12 +20,12 @@ public class BoardService implements BoardServicePort {
     }
 
     @Override
-    public Optional<Board> getById(UUID id) {
+    public Optional<Board> getById(Account caller, UUID id) {
         return boardRepository.getById(id);
     }
 
     @Override
-    public List<Board> getAll(String name, int limit, int offset) {
+    public List<Board> getAll(Account caller, String name, int limit, int offset) {
         List<JpaBoard> boards;
 
         if (name != null && !name.isEmpty()) {
@@ -38,19 +38,17 @@ public class BoardService implements BoardServicePort {
     }
 
     @Override
-    public void save(Board board) {
+    public void save(Account caller, Board board) {
         boardRepository.save(board);
     }
 
     @Override
-    public void update(UUID id, JpaBoard board) {
+    public void update(Account caller, UUID id, JpaBoard board) {
         boardRepository.update(id, board);
     }
 
-
-
     @Override
-    public void deleteById(UUID id) {
+    public void deleteById(Account caller, UUID id) {
         boardRepository.deleteById(id);
     }
 }
