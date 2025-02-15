@@ -105,7 +105,7 @@ curl "http://localhost:8080/api/board?access_token=$MILU_ACCESS_TOKEN"
 Add todo to board
 
 ```bash
-curl -d '{"name":"my first todo", "parentBoard": {id: ?}}' -H "Content-Type: application/json" -X POST "http://localhost:8080/api/todo?access_token=$MILU_ACCESS_TOKEN"
+curl -d '{"name":"my first todo", "parentBoard": {"id": "?"}}' -H "Content-Type: application/json" -X POST "http://localhost:8080/api/todo?access_token=$MILU_ACCESS_TOKEN"
 ```
 
 ## Authors
