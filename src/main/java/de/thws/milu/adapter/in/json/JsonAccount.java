@@ -1,5 +1,6 @@
 package de.thws.milu.adapter.in.json;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Board;
 
@@ -18,7 +19,11 @@ public class JsonAccount implements Account {
         this.id = account.getId();
         this.name = account.getName();
         this.password = account.getPassword();
-        this.boards = account.getBoards();
+
+        List<? extends Board> boards = account.getBoards();
+        if (boards != null) {
+            this.boards = boards.stream().map(JsonBoard::new).toList();
+        }
     }
 
     public JsonAccount(UUID id, String name, String password, List<Board> boards) {
@@ -46,6 +51,7 @@ public class JsonAccount implements Account {
         this.name = name;
     }
 
+    @JsonIgnore
     @Override
     public String getPassword() {
         return password;

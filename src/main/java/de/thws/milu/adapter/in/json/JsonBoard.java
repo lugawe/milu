@@ -18,7 +18,11 @@ public class JsonBoard implements Board {
         this.id = board.getId();
         this.name = board.getName();
         this.description = board.getDescription();
-        this.todos = board.getTodos();
+
+        List<? extends Todo> todos = board.getTodos();
+        if (todos != null) {
+            this.todos = todos.stream().map(JsonTodo::new).toList();
+        }
     }
 
     public JsonBoard(UUID id, String name, String description, List<Todo> todos) {

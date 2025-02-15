@@ -1,5 +1,6 @@
 package de.thws.milu.adapter.in.json;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.thws.milu.core.domain.model.Board;
 import de.thws.milu.core.domain.model.Todo;
 
@@ -19,7 +20,11 @@ public class JsonTodo implements Todo {
         this.name = todo.getName();
         this.description = todo.getDescription();
         this.state = todo.getState();
-        this.parentBoard = todo.getParentBoard();
+
+        Board parentBoard = todo.getParentBoard();
+        if (parentBoard != null) {
+            this.parentBoard = new JsonBoard(parentBoard);
+        }
     }
 
     public JsonTodo(UUID id, String name, String description, State state, Board parentBoard) {
@@ -66,6 +71,7 @@ public class JsonTodo implements Todo {
         this.state = state;
     }
 
+    @JsonIgnore
     @Override
     public Board getParentBoard() {
         return parentBoard;
