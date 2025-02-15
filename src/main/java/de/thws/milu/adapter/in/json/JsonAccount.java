@@ -12,9 +12,14 @@ public class JsonAccount implements Account {
     private UUID id;
     private String name;
     private String password;
-    private List<Board> boards;
+    private List<? extends Board> boards;
 
-    public JsonAccount() {}
+    public JsonAccount(Account account) {
+        this.id = account.getId();
+        this.name = account.getName();
+        this.password = account.getPassword();
+        this.boards = account.getBoards();
+    }
 
     public JsonAccount(UUID id, String name, String password, List<Board> boards) {
         this.id = id;
@@ -51,11 +56,11 @@ public class JsonAccount implements Account {
     }
 
     @Override
-    public List<Board> getBoards() {
+    public List<? extends Board> getBoards() {
         return boards;
     }
 
-    public void setBoards(List<Board> boards) {
+    public void setBoards(List<? extends Board> boards) {
         this.boards = boards;
     }
 

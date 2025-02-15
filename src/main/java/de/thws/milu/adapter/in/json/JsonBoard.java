@@ -12,9 +12,13 @@ public class JsonBoard implements Board {
     private UUID id;
     private String name;
     private String description;
-    private List<Todo> todos;
+    private List<? extends Todo> todos;
 
-    public JsonBoard() {
+    public JsonBoard(Board board) {
+        this.id = board.getId();
+        this.name = board.getName();
+        this.description = board.getDescription();
+        this.todos = board.getTodos();
     }
 
     public JsonBoard(UUID id, String name, String description, List<Todo> todos) {
@@ -52,11 +56,11 @@ public class JsonBoard implements Board {
     }
 
     @Override
-    public List<Todo> getTodos() {
+    public List<? extends Todo> getTodos() {
         return todos;
     }
 
-    public void setTodos(List<Todo> todos) {
+    public void setTodos(List<? extends Todo> todos) {
         this.todos = todos;
     }
 

@@ -14,7 +14,12 @@ public class JsonTodo implements Todo {
     private State state;
     private Board parentBoard;
 
-    public JsonTodo() {
+    public JsonTodo(Todo todo) {
+        this.id = todo.getId();
+        this.name = todo.getName();
+        this.description = todo.getDescription();
+        this.state = todo.getState();
+        this.parentBoard = todo.getParentBoard();
     }
 
     public JsonTodo(UUID id, String name, String description, State state, Board parentBoard) {
