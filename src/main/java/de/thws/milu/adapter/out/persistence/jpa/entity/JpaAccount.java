@@ -18,6 +18,9 @@ public class JpaAccount implements Account {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "password")
+    private String password;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "account_id")
     private List<JpaBoard> boards;
@@ -52,6 +55,15 @@ public class JpaAccount implements Account {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
