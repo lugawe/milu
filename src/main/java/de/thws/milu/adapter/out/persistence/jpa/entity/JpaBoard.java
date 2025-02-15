@@ -21,6 +21,10 @@ public class JpaBoard implements Board {
     @Column(name = "description")
     private String description;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_id")
+    private JpaAccount account;
+
     @OneToMany(mappedBy = "parentBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JpaTodo> todos;
 
@@ -63,6 +67,14 @@ public class JpaBoard implements Board {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public JpaAccount getAccount() {
+        return account;
+    }
+
+    public void setAccount(JpaAccount account) {
+        this.account = account;
     }
 
     @Override
