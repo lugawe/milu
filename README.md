@@ -77,6 +77,14 @@ You could also provide the token as header. For example:
 curl "localhost:8080/api/board" -H "Authorization: Bearer $MILU_ACCESS_TOKEN"
 ```
 
+### Create Board
+
+Create a simple todo board:
+
+```bash
+curl -d '{"name":"board 1", "description":"board 1 info"}' -H "Content-Type: application/json" -X POST "http://localhost:8080/api/board?access_token=$MILU_ACCESS_TOKEN"
+```
+
 ## Authors
 
 Michael Winsauer & Luis Weich
