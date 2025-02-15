@@ -1,5 +1,6 @@
 package de.thws.milu.adapter.out.persistence.jpa;
 
+import de.thws.milu.adapter.out.persistence.jpa.entity.JpaAccount;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
 import de.thws.milu.core.domain.exception.NoValuesAffectedException;
@@ -90,16 +91,22 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
     }
 
     @Override
-    public void save(Account caller, Todo todo) {
+    public Todo save(Account caller, Todo todo) {
 
         log.debug("save: {}", todo);
 
         EntityManager entityManager = getEntityManager();
-        entityManager.persist(todo);
+
+        JpaTodo jpaTodo = new JpaTodo(todo);
+        jpaTodo.setParentBoard(null); // TODO
+
+        entityManager.persist(jpaTodo);
+
+        return jpaTodo;
     }
 
     @Override
-    public void update(Account caller, UUID id, Todo todo) {
+    public Todo update(Account caller, UUID id, Todo todo) {
         log.debug("update Todo: {}", id);
         EntityManager em = getEntityManager();
         JpaTodo existingTodo = em.find(JpaTodo.class, id);
@@ -125,6 +132,8 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
         }
 
         em.merge(existingTodo);
+
+        return existingTodo;
     }
 
     @Override

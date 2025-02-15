@@ -1,6 +1,5 @@
 package de.thws.milu.core.port.out;
 
-import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
 import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Todo;
 import java.util.List;
@@ -14,9 +13,9 @@ public interface TodoRepositoryPort {
 
     List<? extends Todo> findByNameAndState(Account caller, String name, String state, int limit, int offset);
 
-    void save(Account caller, Todo todo);
+    Todo save(Account caller, Todo todo);
 
-    void update(Account caller, UUID id, Todo todo);
+    Todo update(Account caller, UUID id, Todo todo);
 
     void deleteById(Account caller, UUID id);
 }

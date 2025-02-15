@@ -13,9 +13,9 @@ public interface TodoServicePort {
 
     List<? extends Todo> getAll(Account caller, String name, String state, int limit, int offset);
 
-    void save(Account caller, Todo todo);
+    Todo save(Account caller, Todo todo);
 
-    void update(Account caller, UUID id, JsonTodo todo);
+    Todo update(Account caller, UUID id, JsonTodo todo);
 
     void deleteById(Account caller, UUID id);
 }
