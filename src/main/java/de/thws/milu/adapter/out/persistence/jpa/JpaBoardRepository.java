@@ -2,6 +2,7 @@ package de.thws.milu.adapter.out.persistence.jpa;
 
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
 import de.thws.milu.core.domain.exception.NoValuesAffectedException;
+import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Board;
 import de.thws.milu.core.port.out.BoardRepositoryPort;
 import jakarta.inject.Inject;
@@ -10,12 +11,11 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JpaBoardRepository extends JpaRepository implements BoardRepositoryPort {
 
@@ -27,7 +27,7 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
     }
 
     @Override
-    public Optional<Board> getById(UUID id) {
+    public Optional<Board> getById(Account caller, UUID id) {
 
         log.debug("getById: {}", id);
 
@@ -38,7 +38,7 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
     }
 
     @Override
-    public List<JpaBoard> findByName(String name, int limit, int offset) {
+    public List<JpaBoard> findByName(Account caller, String name, int limit, int offset) {
         log.debug("findByNameContaining");
 
         EntityManager entityManager = getEntityManager();
@@ -48,11 +48,15 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
 
         cq.select(root).where(cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
 
-        return entityManager.createQuery(cq).setFirstResult(offset).setMaxResults(limit).getResultList();
+        return entityManager
+                .createQuery(cq)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
     @Override
-    public List<JpaBoard> getAll(int limit, int offset) {
+    public List<JpaBoard> getAll(Account caller, int limit, int offset) {
 
         log.debug("getAll");
 
@@ -64,11 +68,15 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
 
         CriteriaQuery<JpaBoard> selectAll = criteriaQuery.select(root);
 
-        return entityManager.createQuery(selectAll).setFirstResult(offset).setMaxResults(limit).getResultList();
+        return entityManager
+                .createQuery(selectAll)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
     @Override
-    public void save(Board board) {
+    public void save(Account caller, Board board) {
 
         log.debug("save: {}", board);
 
@@ -77,7 +85,7 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
     }
 
     @Override
-    public void update(UUID id, JpaBoard board) {
+    public void update(Account caller, UUID id, JpaBoard board) {
         log.debug("update Board: id={}", id);
         EntityManager em = getEntityManager();
         JpaBoard existingBoard = em.find(JpaBoard.class, id);
@@ -103,7 +111,7 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
     }
 
     @Override
-    public void deleteById(UUID id) {
+    public void deleteById(Account caller, UUID id) {
 
         log.debug("deleteById: {}", id);
 
