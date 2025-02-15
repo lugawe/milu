@@ -151,7 +151,7 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
         return entity;
     }
 
-    public static List<JpaBoard> toEntityList(List<Board> boards) {
+    public static List<JpaBoard> toEntityList(List<? extends Board> boards) {
         List<JpaBoard> entityList = new ArrayList<>();
         for (Board b : boards) {
             entityList.add(toEntity(b));
