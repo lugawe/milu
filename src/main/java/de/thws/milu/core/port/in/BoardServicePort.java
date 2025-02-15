@@ -11,9 +11,9 @@ public interface BoardServicePort {
 
     List<? extends Board> getAll(Account caller, String name, int limit, int offset);
 
-    void save(Account caller, Board board);
+    Board save(Account caller, Board board);
 
-    void update(Account caller, UUID id, Board board);
+    Board update(Account caller, UUID id, Board board);
 
     void deleteById(Account caller, UUID id);
 }

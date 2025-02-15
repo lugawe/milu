@@ -39,13 +39,13 @@ public class BoardService implements BoardServicePort {
     }
 
     @Override
-    public void save(Account caller, Board board) {
-        boardRepository.save(caller, board);
+    public Board save(Account caller, Board board) {
+        return new JsonBoard(boardRepository.save(caller, board));
     }
 
     @Override
-    public void update(Account caller, UUID id, Board board) {
-        boardRepository.update(caller, id, board);
+    public Board update(Account caller, UUID id, Board board) {
+        return new JsonBoard(boardRepository.update(caller, id, board));
     }
 
     @Override

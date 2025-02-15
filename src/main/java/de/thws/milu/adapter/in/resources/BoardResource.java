@@ -94,11 +94,11 @@ public class BoardResource {
     @Path("/")
     public Response save(@Auth Account account, JsonBoard board, @Context UriInfo uriInfo) {
 
-        boardService.save(account, board);
+        Board savedBoard = boardService.save(account, board);
 
-        Resource<Board> resource = new Resource<>(board);
+        Resource<Board> resource = new Resource<>(savedBoard);
         String selfUri = uriInfo.getAbsolutePathBuilder()
-                .path(board.getId().toString())
+                .path(savedBoard.getId().toString())
                 .build()
                 .toString();
         resource.addLink("self", selfUri);
@@ -110,15 +110,15 @@ public class BoardResource {
     @PUT
     @Path("/{boardId}")
     public Response update(
-            @Auth Account account, @PathParam("boardId") UUID id, JsonBoard updatedBoard, @Context UriInfo uriInfo) {
+            @Auth Account account, @PathParam("boardId") UUID id, JsonBoard board, @Context UriInfo uriInfo) {
         Optional<Board> existingBoard = boardService.getById(account, id);
 
         if (existingBoard.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-        boardService.update(account, id, updatedBoard);
+        Board updatedBord = boardService.update(account, id, board);
 
-        Resource<Board> resource = new Resource<>(updatedBoard);
+        Resource<Board> resource = new Resource<>(updatedBord);
         String selfUri = uriInfo.getAbsolutePath().toString();
         resource.addLink("self", selfUri);
 

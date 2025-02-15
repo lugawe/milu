@@ -1,6 +1,7 @@
 package de.thws.milu.adapter.out.persistence.jpa;
 
 import de.thws.milu.adapter.in.json.JsonBoard;
+import de.thws.milu.adapter.out.persistence.jpa.entity.JpaAccount;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
 import de.thws.milu.core.domain.exception.NoValuesAffectedException;
 import de.thws.milu.core.domain.model.Account;
@@ -82,16 +83,23 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
     }
 
     @Override
-    public void save(Account caller, Board board) {
+    public Board save(Account caller, Board board) {
 
         log.debug("save: {}", board);
 
         EntityManager entityManager = getEntityManager();
-        entityManager.persist(board);
+
+        JpaAccount jpaAccount = getJpaAccount(caller);
+        JpaBoard jpaBoard = new JpaBoard(board);
+        jpaBoard.setAccount(jpaAccount);
+
+        entityManager.persist(jpaBoard);
+
+        return jpaBoard;
     }
 
     @Override
-    public void update(Account caller, UUID id, Board board) {
+    public Board update(Account caller, UUID id, Board board) {
         log.debug("update Board: id={}", id);
         EntityManager em = getEntityManager();
         JpaBoard existingBoard = em.find(JpaBoard.class, id);
@@ -114,6 +122,8 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
         }
 
         em.merge(existingBoard);
+
+        return existingBoard;
     }
 
     @Override
