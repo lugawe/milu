@@ -91,11 +91,11 @@ public class TodoResource {
     @Path("/")
     public Response save(@Auth Account account, JsonTodo todo, @Context UriInfo uriInfo) {
 
-        todoService.save(account, todo);
+        Todo savedTodo = todoService.save(account, todo);
 
-        Resource<Todo> resource = new Resource<>(todo);
+        Resource<Todo> resource = new Resource<>(savedTodo);
         String selfUri = uriInfo.getAbsolutePathBuilder()
-                .path(todo.getId().toString())
+                .path(savedTodo.getId().toString())
                 .build()
                 .toString();
         resource.addLink("self", selfUri);
@@ -107,14 +107,14 @@ public class TodoResource {
     @PUT
     @Path("/{todoId}")
     public Response update(
-            @Auth Account account, @PathParam("todoId") UUID id, JsonTodo updatedTodo, @Context UriInfo uriInfo) {
+            @Auth Account account, @PathParam("todoId") UUID id, JsonTodo todo, @Context UriInfo uriInfo) {
         Optional<Todo> existingTodo = todoService.getById(account, id);
 
         if (existingTodo.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        todoService.update(account, id, updatedTodo);
+        Todo updatedTodo = todoService.update(account, id, todo);
 
         Resource<Todo> resource = new Resource<>(updatedTodo);
         String selfUri = uriInfo.getAbsolutePath().toString();
