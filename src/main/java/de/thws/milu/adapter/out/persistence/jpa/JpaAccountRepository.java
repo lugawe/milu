@@ -6,6 +6,7 @@ import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.port.out.AccountRepositoryPort;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -35,6 +36,18 @@ public class JpaAccountRepository extends JpaRepository implements AccountReposi
         JpaAccount account = entityManager.find(JpaAccount.class, id);
 
         return Optional.ofNullable(account);
+    }
+
+    @Override
+    public Optional<Account> getByName(String name) {
+
+        log.debug("getByNameAndPassword: {}", name);
+
+        EntityManager entityManager = getEntityManager();
+        Query query = entityManager.createQuery("from JpaAccount where name = :name");
+        query.setParameter("name", name);
+
+        return Optional.ofNullable((JpaAccount) query.getSingleResult());
     }
 
     @Override
