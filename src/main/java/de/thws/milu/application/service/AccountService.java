@@ -24,6 +24,21 @@ public class AccountService implements AccountServicePort {
     }
 
     @Override
+    public Optional<Account> getByNameAndPassword(String name, String plainPassword) {
+
+        Optional<Account> accountOptional = accountRepository.getByName(name);
+
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+
+            //if (BCryptUtils.check(plainPassword, account.getPassword())) {
+            return Optional.of(account);
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
     public List<Account> getAll() {
         return accountRepository.getAll().stream().map(a -> (Account) a).toList();
     }

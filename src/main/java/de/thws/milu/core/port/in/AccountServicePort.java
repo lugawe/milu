@@ -9,6 +9,8 @@ import java.util.UUID;
 public interface AccountServicePort {
     Optional<Account> getById(UUID id);
 
+    Optional<Account> getByNameAndPassword(String name, String plainPassword);
+
     List<? extends Account> getAll();
 
     void save(Account account);
