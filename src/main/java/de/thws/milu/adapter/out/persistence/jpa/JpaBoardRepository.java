@@ -40,7 +40,21 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
     }
 
     @Override
-    public List<? extends Board> getAll() {
+    public List<JpaBoard> findByName(String name, int limit, int offset) {
+        log.debug("findByNameContaining");
+
+        EntityManager entityManager = getEntityManager();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<JpaBoard> cq = cb.createQuery(JpaBoard.class);
+        Root<JpaBoard> root = cq.from(JpaBoard.class);
+
+        cq.select(root).where(cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
+
+        return entityManager.createQuery(cq).setFirstResult(offset).setMaxResults(limit).getResultList();
+    }
+
+    @Override
+    public List<JpaBoard> getAll(int limit, int offset) {
 
         log.debug("getAll");
 
@@ -52,7 +66,7 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
 
         CriteriaQuery<JpaBoard> selectAll = criteriaQuery.select(root);
 
-        return entityManager.createQuery(selectAll).getResultList();
+        return entityManager.createQuery(selectAll).setFirstResult(offset).setMaxResults(limit).getResultList();
     }
 
     @Override
@@ -62,6 +76,32 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
 
         EntityManager entityManager = getEntityManager();
         entityManager.persist(board);
+    }
+
+    @Override
+    public void update(UUID id, JpaBoard board) {
+        log.debug("update Board: id={}", id);
+        EntityManager em = getEntityManager();
+        JpaBoard existingBoard = em.find(JpaBoard.class, id);
+
+        if (existingBoard == null) {
+            throw new NoValuesAffectedException(String.format("Board with id %s not found", id));
+        }
+
+        // Update fields only if new values are provided.
+        if (board.getName() != null && !board.getName().isEmpty()) {
+            existingBoard.setName(board.getName());
+        }
+
+        if (board.getDescription() != null && !board.getDescription().isEmpty()) {
+            existingBoard.setDescription(board.getDescription());
+        }
+
+        if (board.getTodos() != null) {
+            existingBoard.setTodos(board.getTodos());
+        }
+
+        em.merge(existingBoard);
     }
 
     @Override

@@ -7,6 +7,7 @@ import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.CacheControl;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -37,15 +38,27 @@ public class TodoResource {
             return Response.noContent().build();
         }
 
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+
         return Response.ok(todo.get()).build();
     }
 
     @UnitOfWork
     @GET
     @Path("/")
-    public Response getAll() {
+    public Response getAll(
+            @QueryParam("name") String name,
+            @QueryParam("state") String state,
+            @QueryParam("limit") @DefaultValue("10") int limit,
+            @QueryParam("offset") @DefaultValue("0") int offset
+    ) {
+        // Retrieve todos with filtering and pagination applied.
+        List<Todo> todos = todoService.getAll(name, state, limit, offset);
 
-        List<Todo> todos = todoService.getAll();
+        // Set up cache control (cache for 1 hour)
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
 
         return Response.ok(todos).build();
     }
@@ -58,6 +71,20 @@ public class TodoResource {
         todoService.save(todo);
 
         return Response.ok().build();
+    }
+
+    @UnitOfWork
+    @PUT
+    @Path("/{todoId}")
+    public Response update(@PathParam("todoId") UUID id, JpaTodo updatedTodo) {
+        Optional<Todo> existingTodo = todoService.getById(id);
+
+        if (existingTodo.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        todoService.update(id, updatedTodo);
+        return Response.ok(updatedTodo).build();
     }
 
     @UnitOfWork

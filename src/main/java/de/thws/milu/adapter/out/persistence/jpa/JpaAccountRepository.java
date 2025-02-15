@@ -38,7 +38,21 @@ public class JpaAccountRepository extends JpaRepository implements AccountReposi
     }
 
     @Override
-    public List<? extends Account> getAll() {
+    public List<JpaAccount> findByName(String name, int limit, int offset) {
+        EntityManager em = getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<JpaAccount> cq = cb.createQuery(JpaAccount.class);
+        Root<JpaAccount> root = cq.from(JpaAccount.class);
+
+        // Case-insensitive filter on "name" field
+        cq.select(root)
+                .where(cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
+
+        return em.createQuery(cq).setFirstResult(offset).setMaxResults(limit).getResultList();
+    }
+
+    @Override
+    public List<? extends Account> getAll(int limit, int offset) {
 
         log.debug("getAll");
 
@@ -50,7 +64,7 @@ public class JpaAccountRepository extends JpaRepository implements AccountReposi
 
         CriteriaQuery<JpaAccount> selectAll = criteriaQuery.select(root);
 
-        return entityManager.createQuery(selectAll).getResultList();
+        return entityManager.createQuery(selectAll).setFirstResult(offset).setMaxResults(limit).getResultList();
     }
 
     @Override
@@ -60,6 +74,26 @@ public class JpaAccountRepository extends JpaRepository implements AccountReposi
 
         EntityManager entityManager = getEntityManager();
         entityManager.persist(account);
+    }
+
+    @Override
+    public void update(UUID id, JpaAccount account) {
+        EntityManager entityManager = getEntityManager();
+
+        JpaAccount existingAccount = entityManager.find(JpaAccount.class, id);
+        if (existingAccount == null) {
+            throw new NoValuesAffectedException(String.format("Account with id %s not found", id));
+        }
+
+        if (account.getName() != null && !account.getName().isEmpty()) {
+            existingAccount.setName(account.getName());
+        }
+
+        if (account.getBoards() != null) {
+            existingAccount.setBoards(account.getBoards());
+        }
+
+        entityManager.merge(existingAccount);
     }
 
     @Override

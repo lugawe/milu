@@ -1,6 +1,7 @@
 package de.thws.milu.application.service;
 
 import com.google.inject.Inject;
+import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
 import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Todo;
 import de.thws.milu.core.port.in.TodoServicePort;
@@ -24,15 +25,24 @@ public class TodoService implements TodoServicePort {
         return todoRepository.getById(id);
     }
 
-    @Override
-    public List<Todo> getAll() {
-        return todoRepository.getAll().stream().map(a -> (Todo) a).toList();
+    public List<Todo> getAll(String name, String state, int limit, int offset) {
+        return todoRepository.findByNameAndState(name, state, limit, offset)
+                .stream()
+                .map(a -> (Todo) a)
+                .toList();
     }
 
     @Override
     public void save(Todo todo) {
         todoRepository.save(todo);
     }
+
+    @Override
+    public void update(UUID id, JpaTodo todo) {
+        todoRepository.update(id, todo);
+    }
+
+
 
     @Override
     public void deleteById(UUID id) {

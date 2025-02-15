@@ -7,6 +7,7 @@ import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.CacheControl;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -37,15 +38,26 @@ public class BoardResource {
             return Response.noContent().build();
         }
 
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+
         return Response.ok(board.get()).build();
     }
 
     @UnitOfWork
     @GET
     @Path("/")
-    public Response getAll() {
+    public Response getAll(
+            @QueryParam("name") String name,
+            @QueryParam("limit") @DefaultValue("10") int limit,
+            @QueryParam("offset") @DefaultValue("0") int offset
+    ) {
 
-        List<Board> boards = boardService.getAll();
+        List<Board> boards = boardService.getAll(name, limit, offset);
+
+
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
 
         return Response.ok(boards).build();
     }
@@ -58,6 +70,19 @@ public class BoardResource {
         boardService.save(board);
 
         return Response.ok().build();
+    }
+
+    @UnitOfWork
+    @PUT
+    @Path("/{boardId}")
+    public Response update(@PathParam("boardId") UUID id, JpaBoard updatedBoard) {
+        Optional<Board> existingBoard = boardService.getById(id);
+
+        if (existingBoard.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        boardService.update(id, updatedBoard);
+        return Response.ok(updatedBoard).build();
     }
 
     @UnitOfWork

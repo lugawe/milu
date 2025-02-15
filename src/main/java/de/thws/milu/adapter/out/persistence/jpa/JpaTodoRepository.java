@@ -8,10 +8,7 @@ import de.thws.milu.core.domain.model.Todo;
 import de.thws.milu.core.port.out.TodoRepositoryPort;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaDelete;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +37,7 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
     }
 
     @Override
-    public List<? extends Todo> getAll() {
+    public List<? extends Todo> getAll(int limit, int offset) {
 
         log.debug("getAll");
 
@@ -56,12 +53,72 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
     }
 
     @Override
+    public List<? extends Todo> findByNameAndState(String name, String state, int limit, int offset) {
+        log.debug("findByNameAndState: {} {}", name, state);
+
+        EntityManager entityManager = getEntityManager();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<JpaTodo> query = cb.createQuery(JpaTodo.class);
+        Root<JpaTodo> root = query.from(JpaTodo.class);
+
+        Predicate predicate = cb.conjunction();
+
+        if (name != null && !name.trim().isEmpty()) {
+            predicate = cb.and(predicate,
+                    cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%")
+            );
+        }
+
+        if (state != null && !state.trim().isEmpty()) {
+            try {
+                Todo.State enumState = Todo.State.valueOf(state.toUpperCase());
+                predicate = cb.and(predicate, cb.equal(root.get("state"), enumState));
+            } catch (IllegalArgumentException e) {
+                return List.of();
+            }
+        }
+
+        query.where(predicate);
+
+        return entityManager.createQuery(query).setFirstResult(offset).setMaxResults(limit).getResultList();
+    }
+
+    @Override
     public void save(Todo todo) {
 
         log.debug("save: {}", todo);
 
         EntityManager entityManager = getEntityManager();
         entityManager.persist(todo);
+    }
+
+    @Override
+    public void update(UUID id, JpaTodo todo) {
+        log.debug("update Todo: {}", id);
+        EntityManager em = getEntityManager();
+        JpaTodo existingTodo = em.find(JpaTodo.class, id);
+
+        if (existingTodo == null) {
+            throw new NoValuesAffectedException(String.format("Todo with id %s not found", id));
+        }
+
+        if (todo.getName() != null && !todo.getName().isEmpty()) {
+            existingTodo.setName(todo.getName());
+        }
+
+        if (todo.getDescription() != null && !todo.getDescription().isEmpty()) {
+            existingTodo.setDescription(todo.getDescription());
+        }
+
+        if (todo.getState() != null) {
+            existingTodo.setState(todo.getState());
+        }
+
+        if (todo.getParentBoard() != null) {
+            existingTodo.setParentBoard(todo.getParentBoard());
+        }
+
+        em.merge(existingTodo);
     }
 
     @Override
