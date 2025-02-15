@@ -57,6 +57,26 @@ If you prefer to run the application without Docker:
 
 Once started, access the application at http://localhost:8080.
 
+### Auth
+
+Generate a access token to access resources. In your linux shell:
+
+```bash
+MILU_ACCESS_TOKEN=$(curl "localhost:8080/api/auth/token?name=my_name&password=my_password")
+```
+
+Access resources with this generated access token. For example:
+
+```bash
+curl "localhost:8080/api/board?access_token=$MILU_ACCESS_TOKEN"
+```
+
+You could also provide the token as header. For example:
+
+```bash
+curl "localhost:8080/api/board" -H "Authorization: Bearer $MILU_ACCESS_TOKEN"
+```
+
 ## Authors
 
 Michael Winsauer & Luis Weich

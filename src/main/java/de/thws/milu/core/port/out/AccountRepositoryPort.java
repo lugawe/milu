@@ -10,6 +10,8 @@ import java.util.UUID;
 public interface AccountRepositoryPort {
     Optional<Account> getById(UUID id);
 
+    Optional<Account> getByName(String name);
+
     List<? extends Account> getAll(int limit, int offset);
 
     List<? extends Account> findByName(String name, int limit, int offset);

@@ -11,10 +11,13 @@ public interface AccountServicePort {
     Optional<Account> getById(UUID id);
 
     List<? extends Account> getAll(String name, int limit, int offset);
+    Optional<Account> getByNameAndPassword(String name, String plainPassword);
 
     void save(Account account);
 
     void update(UUID id, JpaAccount account);
 
     void deleteById(UUID id);
+
+    String createAccessToken(Account account);
 }

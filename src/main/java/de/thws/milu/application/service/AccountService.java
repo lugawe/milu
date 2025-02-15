@@ -4,6 +4,7 @@ import de.thws.milu.adapter.out.persistence.jpa.entity.JpaAccount;
 import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.port.in.AccountServicePort;
 import de.thws.milu.core.port.out.AccountRepositoryPort;
+import de.thws.milu.util.jwt.JwtHandler;
 import jakarta.inject.Inject;
 
 import java.util.List;
@@ -13,15 +14,32 @@ import java.util.UUID;
 public class AccountService implements AccountServicePort {
 
     private final AccountRepositoryPort accountRepository;
+    private final JwtHandler jwtHandler;
 
     @Inject
-    public AccountService(AccountRepositoryPort accountRepository) {
+    public AccountService(AccountRepositoryPort accountRepository, JwtHandler jwtHandler) {
         this.accountRepository = accountRepository;
+        this.jwtHandler = jwtHandler;
     }
 
     @Override
     public Optional<Account> getById(UUID id) {
         return accountRepository.getById(id);
+    }
+
+    @Override
+    public Optional<Account> getByNameAndPassword(String name, String plainPassword) {
+
+        Optional<Account> accountOptional = accountRepository.getByName(name);
+
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+
+            //if (BCryptUtils.check(plainPassword, account.getPassword())) {
+            return Optional.of(account);
+        }
+
+        return Optional.empty();
     }
 
     @Override
@@ -46,5 +64,10 @@ public class AccountService implements AccountServicePort {
     @Override
     public void deleteById(UUID id) {
         accountRepository.deleteById(id);
+    }
+
+    @Override
+    public String createAccessToken(Account account) {
+        return jwtHandler.encode(account);
     }
 }

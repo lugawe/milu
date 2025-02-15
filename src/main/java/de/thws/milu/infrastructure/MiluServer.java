@@ -37,5 +37,7 @@ public class MiluServer extends Application<MiluServerConfiguration> {
     @Override
     public void run(MiluServerConfiguration configuration, Environment environment) {
         log.info("Run MiluServer");
+
+        environment.jersey().setUrlPattern("/api/*");
     }
 }
