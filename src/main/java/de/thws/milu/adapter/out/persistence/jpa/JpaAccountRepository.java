@@ -86,9 +86,11 @@ public class JpaAccountRepository extends JpaRepository implements AccountReposi
         log.debug("save: {}", account);
 
         EntityManager entityManager = getEntityManager();
-        entityManager.persist(new JpaAccount(account));
 
-        return account;
+        JpaAccount jpaAccount = new JpaAccount(account);
+        entityManager.persist(jpaAccount);
+
+        return jpaAccount;
     }
 
     @Override

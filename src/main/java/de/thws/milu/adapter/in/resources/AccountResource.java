@@ -86,10 +86,10 @@ public class AccountResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        accountService.save(account);
+        Account savedAccount = accountService.save(account);
 
-        Resource<Account> resource = new Resource<>(account);
-        String selfUri = uriInfo.getAbsolutePathBuilder().path(account.getId().toString()).build().toString();
+        Resource<Account> resource = new Resource<>(savedAccount);
+        String selfUri = uriInfo.getAbsolutePathBuilder().path(savedAccount.getId().toString()).build().toString();
         resource.addLink("self", selfUri);
 
         return Response.ok(resource).build();
@@ -98,14 +98,14 @@ public class AccountResource {
     @UnitOfWork
     @PUT
     @Path("/{accountId}")
-    public Response update(@PathParam("accountId") UUID id, JsonAccount updatedAccount, @Context UriInfo uriInfo) {
+    public Response update(@PathParam("accountId") UUID id, JsonAccount account, @Context UriInfo uriInfo) {
         Optional<Account> existingAccount = accountService.getById(id);
         if (existingAccount.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Account not found")
                     .build();
         }
-        accountService.update(id, updatedAccount);
+        Account updatedAccount = accountService.update(id, account);
 
         Resource<Account> resource = new Resource<>(updatedAccount);
         String selfUri = uriInfo.getAbsolutePath().toString();
