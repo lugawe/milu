@@ -1,6 +1,7 @@
 package de.thws.milu.adapter.in.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.thws.milu.core.domain.model.Board;
 import de.thws.milu.core.domain.model.Todo;
 
@@ -13,7 +14,9 @@ public class JsonTodo implements Todo {
     private String name;
     private String description;
     private State state;
-    private Board parentBoard;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private JsonBoard parentBoard = new JsonBoard();
 
     public JsonTodo() {}
 
@@ -25,7 +28,7 @@ public class JsonTodo implements Todo {
 
         Board parentBoard = todo.getParentBoard();
         if (parentBoard != null) {
-            this.parentBoard = new JsonBoard(parentBoard);
+            this.parentBoard.setId(parentBoard.getId());
         }
     }
 
@@ -34,7 +37,9 @@ public class JsonTodo implements Todo {
         this.name = name;
         this.description = description;
         this.state = state;
-        this.parentBoard = parentBoard;
+        if (parentBoard != null) {
+            this.parentBoard.setId(parentBoard.getId());
+        }
     }
 
     @Override
@@ -79,7 +84,7 @@ public class JsonTodo implements Todo {
         return parentBoard;
     }
 
-    public void setParentBoard(Board parentBoard) {
+    public void setParentBoard(JsonBoard parentBoard) {
         this.parentBoard = parentBoard;
     }
 

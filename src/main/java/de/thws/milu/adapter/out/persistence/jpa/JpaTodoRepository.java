@@ -98,7 +98,9 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
         EntityManager entityManager = getEntityManager();
 
         JpaTodo jpaTodo = new JpaTodo(todo);
-        jpaTodo.setParentBoard(null); // TODO
+
+        JpaBoard board = entityManager.find(JpaBoard.class, todo.getParentBoard().getId());
+        jpaTodo.setParentBoard(board);
 
         entityManager.persist(jpaTodo);
 
