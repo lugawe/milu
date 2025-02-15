@@ -4,6 +4,7 @@ import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
 import de.thws.milu.application.service.TodoService;
 import de.thws.milu.core.domain.model.Todo;
 import io.dropwizard.hibernate.UnitOfWork;
+import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.*;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@PermitAll
 @Singleton
 @Path("/todo")
 @Consumes(MediaType.APPLICATION_JSON)
