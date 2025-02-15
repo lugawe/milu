@@ -92,7 +92,7 @@ public class BoardResource {
     @UnitOfWork
     @POST
     @Path("/")
-    public Response save(@Auth Account account,  JsonBoard board, @Context UriInfo uriInfo) {
+    public Response save(@Auth Account account, JsonBoard board, @Context UriInfo uriInfo) {
 
         boardService.save(account, board);
 

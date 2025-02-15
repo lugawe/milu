@@ -22,7 +22,7 @@ public class BoardService implements BoardServicePort {
 
     @Override
     public Optional<Board> getById(Account caller, UUID id) {
-        return boardRepository.getById(caller, id);
+        return boardRepository.getById(caller, id).map(JsonBoard::new);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class BoardService implements BoardServicePort {
             boards = boardRepository.getAll(caller, limit, offset);
         }
 
-        return boards.stream().map(b -> (Board) b).toList();
+        return boards.stream().map(b -> (Board) new JsonBoard(b)).toList();
     }
 
     @Override
@@ -44,7 +44,7 @@ public class BoardService implements BoardServicePort {
     }
 
     @Override
-    public void update(Account caller, UUID id, JsonBoard board) {
+    public void update(Account caller, UUID id, Board board) {
         boardRepository.update(caller, id, board);
     }
 

@@ -1,7 +1,5 @@
 package de.thws.milu.core.port.in;
 
-import de.thws.milu.adapter.in.json.JsonBoard;
-import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
 import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Board;
 import java.util.List;
@@ -15,7 +13,7 @@ public interface BoardServicePort {
 
     void save(Account caller, Board board);
 
-    void update(Account caller, UUID id, JsonBoard board);
+    void update(Account caller, UUID id, Board board);
 
     void deleteById(Account caller, UUID id);
 }
