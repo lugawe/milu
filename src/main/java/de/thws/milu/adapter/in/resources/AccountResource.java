@@ -3,13 +3,13 @@ package de.thws.milu.adapter.in.resources;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaAccount;
 import de.thws.milu.application.service.AccountService;
 import de.thws.milu.core.domain.model.Account;
+import de.thws.milu.util.Resource;
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.CacheControl;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,17 +30,24 @@ public class AccountResource {
     @UnitOfWork
     @GET
     @Path("/{accountId}")
-    public Response getById(@PathParam("accountId") UUID id) {
+    public Response getById(@PathParam("accountId") UUID id, @Context UriInfo uriInfo) {
 
         Optional<Account> account = accountService.getById(id);
         if (account.isEmpty()) {
             return Response.noContent().build();
         }
 
+        Account a = account.get();
+        Resource<Account> resource = new Resource<>(a);
+        String selfUri = uriInfo.getAbsolutePath().toString();
+        resource.addLink("self", selfUri);
+        resource.addLink("update", selfUri);
+        resource.addLink("delete", selfUri);
+
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        return Response.ok(account.get()).build();
+        return Response.ok(resource).build();
     }
 
     @UnitOfWork
@@ -49,35 +56,49 @@ public class AccountResource {
     public Response getAll(
             @QueryParam("name") String name,
             @QueryParam("limit") @DefaultValue("10") int limit,
-            @QueryParam("offset") @DefaultValue("0") int offset
+            @QueryParam("offset") @DefaultValue("0") int offset,
+            @Context UriInfo uriInfo
     ) {
-        // Retrieve accounts from service with filtering and pagination applied.
         List<Account> accounts = accountService.getAll(name, limit, offset);
+        List<Resource<Account>> resources = accounts.stream().map(account -> {
+            Resource<Account> res = new Resource<>(account);
+            String selfUri = uriInfo.getBaseUriBuilder()
+                    .path(AccountResource.class)
+                    .path(account.getId().toString())
+                    .build().toString();
+            res.addLink("self", selfUri);
+            res.addLink("update", selfUri);
+            res.addLink("delete", selfUri);
+            return res;
+        }).toList();
 
-        // Set CacheControl header (cache for 1 hour)
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        return Response.ok(accounts).build();
+        return Response.ok(resources).build();
     }
 
     @UnitOfWork
     @POST
     @Path("/")
-    public Response save(JpaAccount account) {
+    public Response save(JpaAccount account, @Context UriInfo uriInfo) {
         if (account == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         accountService.save(account);
 
-        return Response.ok().build();
+        Resource<Account> resource = new Resource<>(account);
+        String selfUri = uriInfo.getAbsolutePathBuilder().path(account.getId().toString()).build().toString();
+        resource.addLink("self", selfUri);
+
+        return Response.ok(resource).build();
     }
 
     @UnitOfWork
     @PUT
     @Path("/{accountId}")
-    public Response update(@PathParam("accountId") UUID id, JpaAccount updatedAccount) {
+    public Response update(@PathParam("accountId") UUID id, JpaAccount updatedAccount, @Context UriInfo uriInfo) {
         Optional<Account> existingAccount = accountService.getById(id);
         if (existingAccount.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -85,7 +106,12 @@ public class AccountResource {
                     .build();
         }
         accountService.update(id, updatedAccount);
-        return Response.ok(updatedAccount).build();
+
+        Resource<Account> resource = new Resource<>(updatedAccount);
+        String selfUri = uriInfo.getAbsolutePath().toString();
+        resource.addLink("self", selfUri);
+
+        return Response.ok(resource).build();
     }
 
     @UnitOfWork

@@ -3,13 +3,12 @@ package de.thws.milu.adapter.in.resources;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
 import de.thws.milu.application.service.TodoService;
 import de.thws.milu.core.domain.model.Todo;
+import de.thws.milu.util.Resource;
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.CacheControl;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,17 +30,24 @@ public class TodoResource {
     @UnitOfWork
     @GET
     @Path("/{todoId}")
-    public Response getById(@PathParam("todoId") UUID id) {
+    public Response getById(@PathParam("todoId") UUID id, @Context UriInfo uriInfo) {
 
         Optional<Todo> todo = todoService.getById(id);
         if (todo.isEmpty()) {
             return Response.noContent().build();
         }
 
+        Todo t = todo.get();
+        Resource<Todo> resource = new Resource<>(t);
+        String selfUri = uriInfo.getAbsolutePath().toString();
+        resource.addLink("self", selfUri);
+        resource.addLink("update", selfUri);
+        resource.addLink("delete", selfUri);
+
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        return Response.ok(todo.get()).build();
+        return Response.ok(resource).build();
     }
 
     @UnitOfWork
@@ -51,32 +57,47 @@ public class TodoResource {
             @QueryParam("name") String name,
             @QueryParam("state") String state,
             @QueryParam("limit") @DefaultValue("10") int limit,
-            @QueryParam("offset") @DefaultValue("0") int offset
+            @QueryParam("offset") @DefaultValue("0") int offset,
+            @Context UriInfo uriInfo
     ) {
-        // Retrieve todos with filtering and pagination applied.
         List<Todo> todos = todoService.getAll(name, state, limit, offset);
 
-        // Set up cache control (cache for 1 hour)
+        List<Resource<Todo>> resources = todos.stream().map(todo -> {
+            Resource<Todo> res = new Resource<>(todo);
+            String selfUri = uriInfo.getBaseUriBuilder()
+                    .path(TodoResource.class)
+                    .path(todo.getId().toString())
+                    .build().toString();
+            res.addLink("self", selfUri);
+            res.addLink("update", selfUri);
+            res.addLink("delete", selfUri);
+            return res;
+        }).toList();
+
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        return Response.ok(todos).build();
+        return Response.ok(resources).build();
     }
 
     @UnitOfWork
     @POST
     @Path("/")
-    public Response save(JpaTodo todo) {
+    public Response save(JpaTodo todo, @Context UriInfo uriInfo) {
 
         todoService.save(todo);
 
-        return Response.ok().build();
+        Resource<Todo> resource = new Resource<>(todo);
+        String selfUri = uriInfo.getAbsolutePathBuilder().path(todo.getId().toString()).build().toString();
+        resource.addLink("self", selfUri);
+
+        return Response.ok(resource).build();
     }
 
     @UnitOfWork
     @PUT
     @Path("/{todoId}")
-    public Response update(@PathParam("todoId") UUID id, JpaTodo updatedTodo) {
+    public Response update(@PathParam("todoId") UUID id, JpaTodo updatedTodo, @Context UriInfo uriInfo) {
         Optional<Todo> existingTodo = todoService.getById(id);
 
         if (existingTodo.isEmpty()) {
@@ -84,7 +105,12 @@ public class TodoResource {
         }
 
         todoService.update(id, updatedTodo);
-        return Response.ok(updatedTodo).build();
+
+        Resource<Todo> resource = new Resource<>(updatedTodo);
+        String selfUri = uriInfo.getAbsolutePath().toString();
+        resource.addLink("self", selfUri);
+
+        return Response.ok(resource).build();
     }
 
     @UnitOfWork

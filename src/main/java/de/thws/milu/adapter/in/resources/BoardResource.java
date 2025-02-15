@@ -3,13 +3,12 @@ package de.thws.milu.adapter.in.resources;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
 import de.thws.milu.application.service.BoardService;
 import de.thws.milu.core.domain.model.Board;
+import de.thws.milu.util.Resource;
 import io.dropwizard.hibernate.UnitOfWork;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.CacheControl;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,17 +30,25 @@ public class BoardResource {
     @UnitOfWork
     @GET
     @Path("/{boardId}")
-    public Response getById(@PathParam("boardId") UUID id) {
+    public Response getById(@PathParam("boardId") UUID id, @Context UriInfo uriInfo) {
 
         Optional<Board> board = boardService.getById(id);
         if (board.isEmpty()) {
             return Response.noContent().build();
         }
 
+        Board b = board.get();
+        Resource<Board> resource = new Resource<>(b);
+
+        String selfUri = uriInfo.getAbsolutePath().toString();
+        resource.addLink("self", selfUri);
+        resource.addLink("update", selfUri);
+        resource.addLink("delete", selfUri);
+
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        return Response.ok(board.get()).build();
+        return Response.ok(resource).build();
     }
 
     @UnitOfWork
@@ -50,39 +57,59 @@ public class BoardResource {
     public Response getAll(
             @QueryParam("name") String name,
             @QueryParam("limit") @DefaultValue("10") int limit,
-            @QueryParam("offset") @DefaultValue("0") int offset
+            @QueryParam("offset") @DefaultValue("0") int offset,
+            @Context UriInfo uriInfo
     ) {
 
         List<Board> boards = boardService.getAll(name, limit, offset);
-
+        List<Resource<Board>> resources = boards.stream().map(board -> {
+            Resource<Board> res = new Resource<>(board);
+            String selfUri = uriInfo.getBaseUriBuilder()
+                    .path(BoardResource.class)
+                    .path(board.getId().toString())
+                    .build().toString();
+            res.addLink("self", selfUri);
+            res.addLink("update", selfUri);
+            res.addLink("delete", selfUri);
+            return res;
+        }).toList();
 
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        return Response.ok(boards).build();
+        return Response.ok(resources).build();
     }
 
     @UnitOfWork
     @POST
     @Path("/")
-    public Response save(JpaBoard board) {
+    public Response save(JpaBoard board, @Context UriInfo uriInfo) {
 
         boardService.save(board);
 
-        return Response.ok().build();
+        Resource<Board> resource = new Resource<>(board);
+        String selfUri = uriInfo.getAbsolutePathBuilder().path(board.getId().toString()).build().toString();
+        resource.addLink("self", selfUri);
+
+        return Response.ok(resource).build();
     }
 
     @UnitOfWork
     @PUT
     @Path("/{boardId}")
-    public Response update(@PathParam("boardId") UUID id, JpaBoard updatedBoard) {
+    public Response update(@PathParam("boardId") UUID id, JpaBoard updatedBoard, @Context UriInfo uriInfo) {
         Optional<Board> existingBoard = boardService.getById(id);
 
         if (existingBoard.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         boardService.update(id, updatedBoard);
-        return Response.ok(updatedBoard).build();
+
+        Resource<Board> resource = new Resource<>(updatedBoard);
+        String selfUri = uriInfo.getAbsolutePath().toString();
+        resource.addLink("self", selfUri);
+
+        return Response.ok(resource).build();
     }
 
     @UnitOfWork
