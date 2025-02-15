@@ -15,6 +15,8 @@ public class JsonTodo implements Todo {
     private State state;
     private Board parentBoard;
 
+    public JsonTodo() {}
+
     public JsonTodo(Todo todo) {
         this.id = todo.getId();
         this.name = todo.getName();

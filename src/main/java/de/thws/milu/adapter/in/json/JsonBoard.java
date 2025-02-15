@@ -14,6 +14,8 @@ public class JsonBoard implements Board {
     private String description;
     private List<? extends Todo> todos;
 
+    public JsonBoard() {}
+
     public JsonBoard(Board board) {
         this.id = board.getId();
         this.name = board.getName();

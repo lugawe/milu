@@ -15,6 +15,8 @@ public class JsonAccount implements Account {
     private String password;
     private List<? extends Board> boards;
 
+    public JsonAccount() {}
+
     public JsonAccount(Account account) {
         this.id = account.getId();
         this.name = account.getName();
