@@ -100,6 +100,14 @@ Check if it was created correctly
 curl "http://localhost:8080/api/board?access_token=$MILU_ACCESS_TOKEN"
 ```
 
+### Create Todo
+
+Add todo to board
+
+```bash
+curl -d '{"name":"my first todo", "parentBoard": {id: ?}}' -H "Content-Type: application/json" -X POST "http://localhost:8080/api/todo?access_token=$MILU_ACCESS_TOKEN"
+```
+
 ## Authors
 
 Michael Winsauer & Luis Weich
