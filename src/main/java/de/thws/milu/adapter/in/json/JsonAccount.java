@@ -1,6 +1,7 @@
 package de.thws.milu.adapter.in.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Board;
 
@@ -12,7 +13,10 @@ public class JsonAccount implements Account {
 
     private UUID id;
     private String name;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
     private List<? extends Board> boards;
 
     public JsonAccount() {}
