@@ -57,6 +57,15 @@ If you prefer to run the application without Docker:
 
 Once started, access the application at http://localhost:8080.
 
+
+### Create Account
+
+Start by creating an account:
+
+```bash
+curl -d '{"name":"my_name", "password":"my_password"}' -H "Content-Type: application/json" -X POST http://localhost:8080/api/account
+```
+
 ### Auth
 
 Generate a access token to access resources. In your linux shell:
@@ -83,6 +92,12 @@ Create a simple todo board:
 
 ```bash
 curl -d '{"name":"board 1", "description":"board 1 info"}' -H "Content-Type: application/json" -X POST "http://localhost:8080/api/board?access_token=$MILU_ACCESS_TOKEN"
+```
+
+Check if it was created correctly
+
+```bash
+curl "http://localhost:8080/api/board?access_token=$MILU_ACCESS_TOKEN"
 ```
 
 ## Authors
