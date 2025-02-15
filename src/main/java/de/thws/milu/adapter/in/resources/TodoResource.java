@@ -1,6 +1,6 @@
 package de.thws.milu.adapter.in.resources;
 
-import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
+import de.thws.milu.adapter.in.json.JsonTodo;
 import de.thws.milu.application.service.TodoService;
 import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Todo;
@@ -89,7 +89,7 @@ public class TodoResource {
     @UnitOfWork
     @POST
     @Path("/")
-    public Response save(@Auth Account account, JpaTodo todo, @Context UriInfo uriInfo) {
+    public Response save(@Auth Account account, JsonTodo todo, @Context UriInfo uriInfo) {
 
         todoService.save(account, todo);
 
@@ -107,7 +107,7 @@ public class TodoResource {
     @PUT
     @Path("/{todoId}")
     public Response update(
-            @Auth Account account, @PathParam("todoId") UUID id, JpaTodo updatedTodo, @Context UriInfo uriInfo) {
+            @Auth Account account, @PathParam("todoId") UUID id, JsonTodo updatedTodo, @Context UriInfo uriInfo) {
         Optional<Todo> existingTodo = todoService.getById(account, id);
 
         if (existingTodo.isEmpty()) {

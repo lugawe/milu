@@ -1,6 +1,6 @@
 package de.thws.milu.adapter.in.resources;
 
-import de.thws.milu.adapter.out.persistence.jpa.entity.JpaAccount;
+import de.thws.milu.adapter.in.json.JsonAccount;
 import de.thws.milu.application.service.AccountService;
 import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.util.Resource;
@@ -81,7 +81,7 @@ public class AccountResource {
     @UnitOfWork
     @POST
     @Path("/")
-    public Response save(JpaAccount account, @Context UriInfo uriInfo) {
+    public Response save(JsonAccount account, @Context UriInfo uriInfo) {
         if (account == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -98,7 +98,7 @@ public class AccountResource {
     @UnitOfWork
     @PUT
     @Path("/{accountId}")
-    public Response update(@PathParam("accountId") UUID id, JpaAccount updatedAccount, @Context UriInfo uriInfo) {
+    public Response update(@PathParam("accountId") UUID id, JsonAccount updatedAccount, @Context UriInfo uriInfo) {
         Optional<Account> existingAccount = accountService.getById(id);
         if (existingAccount.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND)

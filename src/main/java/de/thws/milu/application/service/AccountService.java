@@ -1,6 +1,6 @@
 package de.thws.milu.application.service;
 
-import de.thws.milu.adapter.out.persistence.jpa.entity.JpaAccount;
+import de.thws.milu.adapter.in.json.JsonAccount;
 import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.port.in.AccountServicePort;
 import de.thws.milu.core.port.out.AccountRepositoryPort;
@@ -57,7 +57,7 @@ public class AccountService implements AccountServicePort {
     }
 
     @Override
-    public void update(UUID id, JpaAccount account) {
+    public void update(UUID id, JsonAccount account) {
         accountRepository.update(id, account);
     }
 

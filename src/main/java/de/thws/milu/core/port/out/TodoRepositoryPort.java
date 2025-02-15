@@ -16,7 +16,7 @@ public interface TodoRepositoryPort {
 
     void save(Todo todo);
 
-    void update(UUID id, JpaTodo todo);
+    void update(UUID id, Todo todo);
 
     void deleteById(UUID id);
 }

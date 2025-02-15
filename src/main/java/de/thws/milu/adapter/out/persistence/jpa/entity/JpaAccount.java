@@ -1,6 +1,7 @@
 package de.thws.milu.adapter.out.persistence.jpa.entity;
 
 import de.thws.milu.core.domain.model.Account;
+import de.thws.milu.core.domain.model.Board;
 import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;

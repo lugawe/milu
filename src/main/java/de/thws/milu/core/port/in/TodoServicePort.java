@@ -1,5 +1,6 @@
 package de.thws.milu.core.port.in;
 
+import de.thws.milu.adapter.in.json.JsonTodo;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
 import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Todo;
@@ -14,7 +15,7 @@ public interface TodoServicePort {
 
     void save(Account caller, Todo todo);
 
-    void update(Account caller, UUID id, JpaTodo todo);
+    void update(Account caller, UUID id, JsonTodo todo);
 
     void deleteById(Account caller, UUID id);
 }

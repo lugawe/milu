@@ -1,6 +1,6 @@
 package de.thws.milu.core.port.out;
 
-import de.thws.milu.adapter.out.persistence.jpa.entity.JpaAccount;
+import de.thws.milu.adapter.in.json.JsonAccount;
 import de.thws.milu.core.domain.model.Account;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface AccountRepositoryPort {
 
     void save(Account account);
 
-    void update(UUID id, JpaAccount account);
+    void update(UUID id, JsonAccount account);
 
     void deleteById(UUID id);
 }

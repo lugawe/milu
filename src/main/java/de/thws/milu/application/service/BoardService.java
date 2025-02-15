@@ -1,6 +1,7 @@
 package de.thws.milu.application.service;
 
 import com.google.inject.Inject;
+import de.thws.milu.adapter.in.json.JsonBoard;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
 import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Board;
@@ -43,7 +44,7 @@ public class BoardService implements BoardServicePort {
     }
 
     @Override
-    public void update(Account caller, UUID id, JpaBoard board) {
+    public void update(Account caller, UUID id, JsonBoard board) {
         boardRepository.update(id, board);
     }
 

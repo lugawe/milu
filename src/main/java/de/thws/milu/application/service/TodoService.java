@@ -1,6 +1,8 @@
 package de.thws.milu.application.service;
 
 import com.google.inject.Inject;
+import de.thws.milu.adapter.in.json.JsonTodo;
+import de.thws.milu.adapter.out.persistence.jpa.JpaTodoRepository;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
 import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Todo;
@@ -37,7 +39,7 @@ public class TodoService implements TodoServicePort {
     }
 
     @Override
-    public void update(Account caller, UUID id, JpaTodo todo) {
+    public void update(Account caller, UUID id, JsonTodo todo) {
         todoRepository.update(id, todo);
     }
 

@@ -1,7 +1,9 @@
 package de.thws.milu.adapter.out.persistence.jpa;
 
+import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
 import de.thws.milu.core.domain.exception.NoValuesAffectedException;
+import de.thws.milu.core.domain.model.Board;
 import de.thws.milu.core.domain.model.Todo;
 import de.thws.milu.core.port.out.TodoRepositoryPort;
 import jakarta.inject.Inject;
@@ -10,6 +12,7 @@ import jakarta.persistence.criteria.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -91,7 +94,7 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
     }
 
     @Override
-    public void update(UUID id, JpaTodo todo) {
+    public void update(UUID id, Todo todo) {
         log.debug("update Todo: {}", id);
         EntityManager em = getEntityManager();
         JpaTodo existingTodo = em.find(JpaTodo.class, id);
@@ -113,7 +116,7 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
         }
 
         if (todo.getParentBoard() != null) {
-            existingTodo.setParentBoard(todo.getParentBoard());
+            existingTodo.setParentBoard(JpaBoardRepository.toEntity(todo.getParentBoard()));
         }
 
         em.merge(existingTodo);
@@ -136,5 +139,32 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
         if (n == 0) {
             throw new NoValuesAffectedException(String.format("cannot deleteById %s", id));
         }
+    }
+
+    public static Board toDomain(JpaBoard jpaBoard) {
+
+        return jpaBoard;
+    }
+
+    public static JpaTodo toEntity(Todo todo) {
+
+        JpaTodo entity = new JpaTodo();
+        entity.setId(todo.getId());
+        entity.setName(todo.getName());
+        entity.setDescription(todo.getDescription());
+        entity.setState(todo.getState());
+        entity.setParentBoard(JpaBoardRepository.toEntity(todo.getParentBoard()));
+
+
+        return entity;
+    }
+
+    public static List<JpaTodo> toEntityList(List<? extends Todo> todos) {
+        List<JpaTodo> entityList = new ArrayList<>();
+        for (Todo t : todos) {
+            entityList.add(toEntity(t));
+        }
+
+        return entityList;
     }
 }

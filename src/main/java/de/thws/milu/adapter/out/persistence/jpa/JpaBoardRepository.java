@@ -3,6 +3,7 @@ package de.thws.milu.adapter.out.persistence.jpa;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
 import de.thws.milu.core.domain.exception.NoValuesAffectedException;
 import de.thws.milu.core.domain.model.Board;
+import de.thws.milu.core.domain.model.Todo;
 import de.thws.milu.core.port.out.BoardRepositoryPort;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -13,6 +14,7 @@ import jakarta.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -77,7 +79,7 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
     }
 
     @Override
-    public void update(UUID id, JpaBoard board) {
+    public void update(UUID id, Board board) {
         log.debug("update Board: id={}", id);
         EntityManager em = getEntityManager();
         JpaBoard existingBoard = em.find(JpaBoard.class, id);
@@ -96,7 +98,7 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
         }
 
         if (board.getTodos() != null) {
-            existingBoard.setTodos(board.getTodos());
+            existingBoard.setTodos(JpaTodoRepository.toEntityList(board.getTodos()));
         }
 
         em.merge(existingBoard);
@@ -119,5 +121,30 @@ public class JpaBoardRepository extends JpaRepository implements BoardRepository
         if (n == 0) {
             throw new NoValuesAffectedException(String.format("cannot deleteById %s", id));
         }
+    }
+
+    public static Board toDomain(JpaBoard jpaBoard) {
+
+        return jpaBoard;
+    }
+
+    public static JpaBoard toEntity(Board board) {
+
+        JpaBoard entity = new JpaBoard();
+        entity.setId(board.getId());
+        entity.setName(board.getName());
+        entity.setDescription(board.getDescription());
+        entity.setTodos(JpaTodoRepository.toEntityList(board.getTodos()));
+
+        return entity;
+    }
+
+    public static List<JpaBoard> toEntityList(List<Board> boards) {
+        List<JpaBoard> entityList = new ArrayList<>();
+        for (Board b : boards) {
+            entityList.add(toEntity(b));
+        }
+
+        return entityList;
     }
 }

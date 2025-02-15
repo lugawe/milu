@@ -1,5 +1,6 @@
 package de.thws.milu.adapter.in.resources;
 
+import de.thws.milu.adapter.in.json.JsonBoard;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
 import de.thws.milu.application.service.BoardService;
 import de.thws.milu.core.domain.model.Account;
@@ -91,7 +92,7 @@ public class BoardResource {
     @UnitOfWork
     @POST
     @Path("/")
-    public Response save(@Auth Account account, JpaBoard board, @Context UriInfo uriInfo) {
+    public Response save(@Auth Account account,  JsonBoard board, @Context UriInfo uriInfo) {
 
         boardService.save(account, board);
 
@@ -109,7 +110,7 @@ public class BoardResource {
     @PUT
     @Path("/{boardId}")
     public Response update(
-            @Auth Account account, @PathParam("boardId") UUID id, JpaBoard updatedBoard, @Context UriInfo uriInfo) {
+            @Auth Account account, @PathParam("boardId") UUID id, JsonBoard updatedBoard, @Context UriInfo uriInfo) {
         Optional<Board> existingBoard = boardService.getById(account, id);
 
         if (existingBoard.isEmpty()) {

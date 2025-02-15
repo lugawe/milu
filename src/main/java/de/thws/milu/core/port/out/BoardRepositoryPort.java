@@ -16,7 +16,7 @@ public interface BoardRepositoryPort {
 
     void save(Board board);
 
-    void update(UUID id, JpaBoard board);
+    void update(UUID id, Board board);
 
     void deleteById(UUID id);
 }
