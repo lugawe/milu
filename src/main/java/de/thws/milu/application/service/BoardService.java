@@ -22,7 +22,7 @@ public class BoardService implements BoardServicePort {
 
     @Override
     public Optional<Board> getById(Account caller, UUID id) {
-        return boardRepository.getById(id);
+        return boardRepository.getById(caller, id);
     }
 
     @Override
@@ -30,9 +30,9 @@ public class BoardService implements BoardServicePort {
         List<JpaBoard> boards;
 
         if (name != null && !name.isEmpty()) {
-            boards = boardRepository.findByName(name, limit, offset);
+            boards = boardRepository.findByName(caller, name, limit, offset);
         } else {
-            boards = boardRepository.getAll(limit, offset);
+            boards = boardRepository.getAll(caller, limit, offset);
         }
 
         return boards.stream().map(b -> (Board) b).toList();
@@ -40,16 +40,16 @@ public class BoardService implements BoardServicePort {
 
     @Override
     public void save(Account caller, Board board) {
-        boardRepository.save(board);
+        boardRepository.save(caller, board);
     }
 
     @Override
     public void update(Account caller, UUID id, JsonBoard board) {
-        boardRepository.update(id, board);
+        boardRepository.update(caller, id, board);
     }
 
     @Override
     public void deleteById(Account caller, UUID id) {
-        boardRepository.deleteById(id);
+        boardRepository.deleteById(caller, id);
     }
 }

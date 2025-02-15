@@ -23,28 +23,28 @@ public class TodoService implements TodoServicePort {
 
     @Override
     public Optional<Todo> getById(Account caller, UUID id) {
-        return todoRepository.getById(id);
+        return todoRepository.getById(caller, id);
     }
 
     @Override
     public List<Todo> getAll(Account caller, String name, String state, int limit, int offset) {
-        return todoRepository.findByNameAndState(name, state, limit, offset).stream()
+        return todoRepository.findByNameAndState(caller, name, state, limit, offset).stream()
                 .map(a -> (Todo) a)
                 .toList();
     }
 
     @Override
     public void save(Account caller, Todo todo) {
-        todoRepository.save(todo);
+        todoRepository.save(caller, todo);
     }
 
     @Override
     public void update(Account caller, UUID id, JsonTodo todo) {
-        todoRepository.update(id, todo);
+        todoRepository.update(caller, id, todo);
     }
 
     @Override
     public void deleteById(Account caller, UUID id) {
-        todoRepository.deleteById(id);
+        todoRepository.deleteById(caller, id);
     }
 }

@@ -16,7 +16,7 @@ public class JpaAccount implements Account {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
     @Column(name = "password")

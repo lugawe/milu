@@ -4,6 +4,7 @@ import de.thws.milu.adapter.out.persistence.jpa.entity.JpaBoard;
 import de.thws.milu.adapter.out.persistence.jpa.entity.JpaTodo;
 import de.thws.milu.core.domain.exception.NoValuesAffectedException;
 import de.thws.milu.core.domain.model.Board;
+import de.thws.milu.core.domain.model.Account;
 import de.thws.milu.core.domain.model.Todo;
 import de.thws.milu.core.port.out.TodoRepositoryPort;
 import jakarta.inject.Inject;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPort {
 
@@ -27,7 +30,7 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
     }
 
     @Override
-    public Optional<Todo> getById(UUID id) {
+    public Optional<Todo> getById(Account caller, UUID id) {
 
         log.debug("getById: {}", id);
 
@@ -38,7 +41,7 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
     }
 
     @Override
-    public List<? extends Todo> getAll(int limit, int offset) {
+    public List<? extends Todo> getAll(Account caller, int limit, int offset) {
 
         log.debug("getAll");
 
@@ -54,7 +57,7 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
     }
 
     @Override
-    public List<? extends Todo> findByNameAndState(String name, String state, int limit, int offset) {
+    public List<? extends Todo> findByNameAndState(Account caller, String name, String state, int limit, int offset) {
         log.debug("findByNameAndState: {} {}", name, state);
 
         EntityManager entityManager = getEntityManager();
@@ -65,9 +68,7 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
         Predicate predicate = cb.conjunction();
 
         if (name != null && !name.trim().isEmpty()) {
-            predicate = cb.and(predicate,
-                    cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%")
-            );
+            predicate = cb.and(predicate, cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
         }
 
         if (state != null && !state.trim().isEmpty()) {
@@ -81,11 +82,15 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
 
         query.where(predicate);
 
-        return entityManager.createQuery(query).setFirstResult(offset).setMaxResults(limit).getResultList();
+        return entityManager
+                .createQuery(query)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
     @Override
-    public void save(Todo todo) {
+    public void save(Account caller, Todo todo) {
 
         log.debug("save: {}", todo);
 
@@ -94,7 +99,7 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
     }
 
     @Override
-    public void update(UUID id, Todo todo) {
+    public void update(Account caller, UUID id, Todo todo) {
         log.debug("update Todo: {}", id);
         EntityManager em = getEntityManager();
         JpaTodo existingTodo = em.find(JpaTodo.class, id);
@@ -123,7 +128,7 @@ public class JpaTodoRepository extends JpaRepository implements TodoRepositoryPo
     }
 
     @Override
-    public void deleteById(UUID id) {
+    public void deleteById(Account caller, UUID id) {
 
         log.debug("deleteById: {}", id);
 
